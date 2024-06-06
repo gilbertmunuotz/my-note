@@ -1,7 +1,8 @@
 # Logs
 logs
 *.log
-npm-debug.log*
+node_modules/
+yarn-error.log
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
@@ -11,6 +12,11 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +28,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+*.bak
+*.backup
+*.swp
