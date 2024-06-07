@@ -10,7 +10,8 @@
     "plugin:node/recommended"
   ],
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "ecmaVersion": "latest",
+    "sourceType": "module"
   },
   "rules": {
     "@typescript-eslint/explicit-member-accessibility": "warn",
@@ -27,7 +28,7 @@
       "warn",
       "always-multiline"
     ],
-    "no-console":"off",
+    "no-console": "off",
     "no-extra-boolean-cast": 0,
     "semi": 1,
     "quotes": [
