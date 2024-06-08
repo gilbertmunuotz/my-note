@@ -1,9 +1,9 @@
-import { Router } from 'express';
+// import { Router } from 'express';
 
-// **** Functions **** //
-//Initiate Express Router
-const router = Router();
+// // **** Functions **** //
+// //Initiate Express Router
+// const router = Router();
 
 
-// **** Export default **** //
-export default router;
+// // **** Export default **** //
+// export default router;
