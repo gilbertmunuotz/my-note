@@ -5,9 +5,7 @@
     "build": "npx ts-node build.ts",
     "lint": "npx eslint --ext .ts src/",
     "lint:tests": "npx eslint --ext .ts spec/",
-    "dev": "nodemon",
-    "test": "nodemon --config ./spec/nodemon.json",
-    "test:no-reloading": "npx ts-node --files -r tsconfig-paths/register ./spec"
+    "dev": "nodemon"
   },
   "nodemonConfig": {
     "watch": [
@@ -29,6 +27,7 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "joi": "^17.13.1",
     "jsonfile": "^6.1.0",
     "module-alias": "^2.2.3",
     "mongoose": "^8.4.0",

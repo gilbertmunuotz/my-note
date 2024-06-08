@@ -6,7 +6,7 @@ const envPath = path.resolve(__dirname, '../env', 'development.env');
 dotenv.config({ path: envPath });
 import EnvVars from './constants/EnvVars';
 import mongoose from 'mongoose';
-import UserRoutes from './routes/UserRoutes';
+// import UserRoutes from './routes/UserRoutes';
 import NotesRoute from './routes/NotesRoute';
 
 
@@ -24,12 +24,11 @@ connectToMongo();
 // Initiate Express
 const app = express();
 
-
 // Middleware
 app.use(express.json());
 
 // Routes
-app.use(UserRoutes);
+// app.use(UserRoutes);
 app.use(NotesRoute);
 
 // Listen to Server Response
@@ -38,4 +37,5 @@ app.listen(port, () => {
   console.log(`Server Listening on ${port}`);
 });
 
-module.exports = app; // Export the app instance
+// Export the app instance
+module.exports = app; 
