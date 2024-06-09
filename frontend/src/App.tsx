@@ -1,10 +1,18 @@
+import Home from "./pages/Home";
+import NotFound from './components/NotFound';
+import { ToastContainer } from "react-toastify";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
 function App() {
+
+  const router = createBrowserRouter([
+    { path: '/', element: <Home />, errorElement: <NotFound /> },
+  ]);
 
   return (
     <>
-      <div>
-        <h1 className="">Welcome Back</h1>
-      </div>
+      <ToastContainer />
+      <RouterProvider router={router} />
     </>
   )
 }

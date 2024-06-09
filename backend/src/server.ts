@@ -14,7 +14,7 @@ import NotesRoute from './routes/NotesRoute';
 async function connectToMongo() {
   try {
     await mongoose.connect(EnvVars.MongoDB_URL);
-    console.log('MongoDB connected successfully');
+    console.log('MongoDB connected successfully!');
   } catch (error) {
     console.error('Error Connecting to MongoDB', error);
   }
@@ -34,7 +34,7 @@ app.use(NotesRoute);
 // Listen to Server Response
 const port = EnvVars.Port || 4000;
 app.listen(port, () => {
-  console.log(`Server Listening on ${port}`);
+  console.log(`Server Listening on Port ${port}`);
 });
 
 // Export the app instance
