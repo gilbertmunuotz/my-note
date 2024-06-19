@@ -27,18 +27,18 @@ function Home() {
     }, [url])
 
     return (
-        <div>
+        <div className="p-4">
             {isloading ? (
-                <Spinner loading={isloading} /> //Pass loading state to Spinner component
+                <Spinner loading={isloading} /> // Pass loading state to Spinner component
             ) : (
-                notes.map(note => (
-                    <div key={note._id}>
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mx-12 mb-8">
-                            <h1>{note.title}</h1>
-                            <p>{note.text}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 mb-8">
+                    {notes.map(note => (
+                        <div key={note._id} className="p-4 bg-white rounded-lg shadow-md">
+                            <h1 className="text-xl font-bold mb-2">{note.title}</h1>
+                            <p className="text-gray-700">{note.text}</p>
                         </div>
-                    </div>
-                ))
+                    ))}
+                </div>
             )}
         </div>
     )
