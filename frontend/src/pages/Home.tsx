@@ -13,9 +13,7 @@ function Home() {
             async function fetchData() {
                 setIsLoading(true)
                 try {
-                    const response = await fetch(url, {
-                        method: 'GET'
-                    });
+                    const response = await fetch(url, { method: 'GET' });
                     const data = await response.json()
                     setNotes(data.notes);
                 } catch (error) {
@@ -35,10 +33,9 @@ function Home() {
             ) : (
                 notes.map(note => (
                     <div key={note._id}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mx-12 mb-8">
                             <h1>{note.title}</h1>
                             <p>{note.text}</p>
-                            
                         </div>
                     </div>
                 ))
