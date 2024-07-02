@@ -1,19 +1,6 @@
-
 import { Request, Response, NextFunction } from "express";
 import NoteModel from "../models/Note";
 import HttpStatusCodes from "../constants/HttpStatusCodes";
-
-
-//(DESC) A sample to test the routes & connections
-async function getSignal(req: Request, res: Response, next: NextFunction) {
-    try {
-        res.send('Welcome Back To My Note');
-    } catch (error) {
-        console.error('Error Getting Signal', error);
-        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send({ status: 'error', message: 'Internal Server Error' });
-        next(error);
-    }
-}
 
 
 //(DESC) Create New Note
@@ -30,7 +17,7 @@ async function createNote(req: Request, res: Response, next: NextFunction) {
 
     try {
         const newNote = await NoteModel.create<NoteBody>({ title, text })
-        return res.status(HttpStatusCodes.CREATED).send({ message: 'Note Created Succesfully' });
+        return res.status(HttpStatusCodes.CREATED).send({ status: 'Success', message: 'Note Created Succesfully' });
 
     } catch (error) {
         console.error('An Error Occured, Please Try Again Later', error);
@@ -44,7 +31,7 @@ async function createNote(req: Request, res: Response, next: NextFunction) {
 async function getAllNotes(req: Request, res: Response, next: NextFunction) {
     try {
         const notes = await NoteModel.find({})
-        res.status(HttpStatusCodes.OK).json({ notes })
+        res.status(HttpStatusCodes.OK).json({ Quantity: notes.length, Notes: notes })
     } catch (error) {
         console.error('Error Getting Data', error);
         res.status(HttpStatusCodes.NOT_FOUND).send({ status: 'error', message: 'Error Getting Data' });
@@ -93,7 +80,7 @@ async function updateNote(req: Request, res: Response, next: NextFunction) {
         if (!updatingNote) {
             return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'error', message: 'Note Not Found' });
         } else {
-            return res.status(HttpStatusCodes.OK).json({ status: 'Succes', message: 'Note Updated Succesfully' });
+            return res.status(HttpStatusCodes.OK).json({ status: 'Success', message: 'Note Updated Succesfully' });
         }
     } catch (error) {
         console.error('Error Updating Note', error);
@@ -126,4 +113,4 @@ async function deleteNote(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export { getSignal, createNote, getAllNotes, getSingleNote, updateNote, deleteNote }
+export { createNote, getAllNotes, getSingleNote, updateNote, deleteNote }

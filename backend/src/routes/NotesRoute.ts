@@ -1,31 +1,31 @@
 //  *** Import Router & Controller Func ***//
 import { Router } from "express";
 import validateNote from "../middlewares/NoteMiddleware";
-import { getSignal, createNote, getAllNotes, getSingleNote, deleteNote } from '../controllers/NotesController';
+import { createNote, getAllNotes, getSingleNote, updateNote, deleteNote } from '../controllers/NotesController';
 
 // **** Functions **** //
 //Initiate Express Router
 const router = Router();
 
 
-/*GET Signal*/
-router.get('/api/v1', getSignal);
+/* GET All Notes */
+router.get('/all', getAllNotes);
 
 
 /* POST New Note */
-router.post('/api/newnote', createNote, validateNote);
-
-
-/* GET All Notes */
-router.get('/api/allNotes', getAllNotes);
+router.post('/new', validateNote, createNote);
 
 
 /* GET Single Note By Id */
-router.get('/api/note/:id', getSingleNote);
+router.get('/note/:id', getSingleNote);
+
+
+/* Update Not By Id */
+router.put('/update/:id', updateNote);
 
 
 /* DELETE Single Note By Id */
-router.delete('/api/delete/:id', deleteNote);
+router.delete('/delete/:id', deleteNote);
 
 
 // **** Export default **** //

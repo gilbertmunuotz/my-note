@@ -6,7 +6,7 @@ function Home() {
 
     const [notes, setNotes] = useState<FetchedNotes[]>([])
     const [isloading, setIsLoading] = useState(true);
-    const url = `/api/allNotes`
+    const url = `/api/notes/all`;
 
     useEffect(() => {
         setTimeout(() => {
@@ -15,7 +15,7 @@ function Home() {
                 try {
                     const response = await fetch(url, { method: 'GET' });
                     const data = await response.json()
-                    setNotes(data.notes);
+                    setNotes(data.Notes);
                 } catch (error) {
                     console.error('Error Fetching Data', error);
                 } finally {
@@ -23,13 +23,13 @@ function Home() {
                 }
             }
             fetchData();
-        }, 4 * 1000);
+        }, 3 * 1000); //Set TimeOut for 3 Seconds
     }, [url])
 
     return (
         <div className="p-4">
             {isloading ? (
-                <Spinner loading={isloading} /> // Pass loading state to Spinner component
+                <Spinner loading={isloading} /> //Pass loading state to Spinner component
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 mb-8">
                     {notes.map(note => (
