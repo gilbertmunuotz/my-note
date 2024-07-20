@@ -12,6 +12,7 @@ lerna-debug.log*
 
 node_modules
 dist/
+/env
 dist-ssr
 *.local
 .env
@@ -34,4 +35,3 @@ dist-ssr
 *.bak
 *.backup
 *.swp
-
