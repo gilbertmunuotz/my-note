@@ -1,16 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import NoteModel from "../models/Note";
+import { NoteBody, ReqNoteBody } from "../constants/Interfaces";
 import HttpStatusCodes from "../constants/HttpStatusCodes";
-
 
 //(DESC) Create New Note
 async function createNote(req: Request, res: Response, next: NextFunction) {
-
-    //Define Interface
-    interface NoteBody {
-        title: string,
-        text: string
-    }
 
     // Destructure Request Body and explicitly type it
     const { title, text }: NoteBody = req.body;
@@ -60,21 +54,28 @@ async function getSingleNote(req: Request, res: Response, next: NextFunction) {
 //(DESC) Update Note By Id
 async function updateNote(req: Request, res: Response, next: NextFunction) {
 
-    //Define Interface
-    interface ReqNoteBody {
-        title: string,
-        text: string
-    }
-
     //Destructure id from req.params
     const { id } = req.params;
 
     // Destructure Request Body and explicitly type it
     const noteData: ReqNoteBody = req.body;
 
+    //Destructure The Two value Pairs for validation
     const { title, text } = noteData;
 
+    // Trim whitespaces
+    const trimmedTitle = noteData.title.trim();
+    const trimmedText = noteData.text.trim();
+
+
     try {
+
+        if (!trimmedTitle) {
+            return res.status(HttpStatusCodes.BAD_REQUEST).json({ status: 'error', message: "Title can't be empty", });
+        } else if (!trimmedText) {
+            return res.status(HttpStatusCodes.BAD_REQUEST).json({ status: 'error', message: "Text can't be empty", });
+        }
+
         const updatingNote = await NoteModel.findByIdAndUpdate<ReqNoteBody>(id, noteData, { new: true });
 
         if (!updatingNote) {
@@ -89,6 +90,57 @@ async function updateNote(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+
+//(DESC) Pin A Note By Id
+async function pinNote(req: Request, res: Response, next: NextFunction) {
+
+    //Destructure id from req.params
+    const { id } = req.params;
+
+    try {
+        const note = await NoteModel.findById(id);
+
+        if (!note) {
+            return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'error', message: 'Note Not Found' });
+        }
+
+        // Set pinned flag to true
+        note.pinned = true;
+        const updatedNote = await note.save();
+
+        return res.status(HttpStatusCodes.OK).json({ status: 'Success', message: 'Note Pinned Successfully', Note: updatedNote, });
+    } catch (error) {
+        console.error('Error Pinning Note', error);
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'Error', message: 'Internal Server Error', });
+        next(error);
+    }
+}
+
+
+//(DESC) Un Pin A Note By Id
+async function unPinNote(req: Request, res: Response, next: NextFunction) {
+
+    //Destructure id from req.params
+    const { id } = req.params;
+
+    try {
+        const note = await NoteModel.findById(id);
+
+        if (!note) {
+            return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'error', message: 'Note Not Found' });
+        }
+
+        // Set pinned flag to false
+        note.pinned = false;
+        const updatedNote = await note.save();
+
+        return res.status(HttpStatusCodes.OK).json({ status: 'Success', message: 'Note Un Pinned Successfully', Note: updatedNote, });
+    } catch (error) {
+        console.error('Error Pinning Note', error);
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'Error', message: 'Internal Server Error', });
+        next(error);
+    }
+}
 
 //(DESC) Delete Note By Id
 async function deleteNote(req: Request, res: Response, next: NextFunction) {
@@ -113,4 +165,4 @@ async function deleteNote(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export { createNote, getAllNotes, getSingleNote, updateNote, deleteNote }
+export { createNote, getAllNotes, getSingleNote, updateNote, pinNote, unPinNote, deleteNote }

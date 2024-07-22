@@ -34,8 +34,6 @@ app.use(cors({
 }));
 
 
-//(DESC) A sample to test the routes & connections
-
 //Test Sample Route
 app.get('/api', (req: Request, res: Response, next: NextFunction) => {
   try {

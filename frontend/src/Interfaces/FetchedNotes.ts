@@ -3,7 +3,8 @@ interface FetchedNotes {
     title: string,
     text: string,
     createdAt: string,
-    updatedAt: string;
+    updatedAt: string,
+    pinned: boolean;
 }
 
 
