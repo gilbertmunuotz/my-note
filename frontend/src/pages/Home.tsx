@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner";
-import { FetchedNotes } from "../Types/FetchedNotes";
+import { FetchedNotes } from "../Interfaces/FetchedNotes";
 
 function Home() {
 
@@ -44,4 +44,4 @@ function Home() {
     )
 }
 
-export default Home
+export default Home;

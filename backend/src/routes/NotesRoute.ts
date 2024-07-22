@@ -1,7 +1,7 @@
 //  *** Import Router & Controller Func ***//
 import { Router } from "express";
 import validateNote from "../middlewares/NoteMiddleware";
-import { createNote, getAllNotes, getSingleNote, updateNote, deleteNote } from '../controllers/NotesController';
+import { createNote, getAllNotes, getSingleNote, updateNote, pinNote, unPinNote, deleteNote } from '../controllers/NotesController';
 
 // **** Functions **** //
 //Initiate Express Router
@@ -22,6 +22,14 @@ router.get('/note/:id', getSingleNote);
 
 /* Update Not By Id */
 router.put('/update/:id', updateNote);
+
+
+/* Pin A Note By Id */
+router.patch('/pin/:id', pinNote);
+
+
+/* Un Pin A Note By Id */
+router.patch('/unpin/:id', unPinNote);
 
 
 /* DELETE Single Note By Id */
