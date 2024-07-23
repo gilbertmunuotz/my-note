@@ -1,5 +1,6 @@
 import Home from "./pages/Home";
 import NotFound from './components/NotFound';
+import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
