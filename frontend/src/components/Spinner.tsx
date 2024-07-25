@@ -1,6 +1,5 @@
-
 import BeatLoader from 'react-spinners/BeatLoader'
-import { SpinnerProps } from '../Interfaces/FetchedNotes';
+import { SpinnerProps } from '../Interfaces/Interfaces';
 
 function Spinner(props: SpinnerProps) {
 

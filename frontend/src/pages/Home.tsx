@@ -1,14 +1,21 @@
+import NewNote from './AddNote';
+import { Fab } from "@mui/material";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner";
+import AddIcon from '@mui/icons-material/Add';
 import { formatDate } from "../utilities/Datefunc";
-import { FetchedNotes } from "../Interfaces/FetchedNotes";
+import { FetchedNotes } from "../Interfaces/Interfaces";
 
 function Home() {
 
-    const [notes, setNotes] = useState<FetchedNotes[]>([])
+    const [notes, setNotes] = useState<FetchedNotes[]>([]);
+    const [modal, setModal] = useState(false);
     const [isloading, setIsLoading] = useState(true);
     const url = `/api/notes/all`;
+
+    const handleOpen = () => setModal(true);
+    const handleClose = () => setModal(false);
 
     useEffect(() => {
         setTimeout(() => {
@@ -56,6 +63,10 @@ function Home() {
                     ))}
                 </div>
             )}
+            <Fab color="primary" aria-label="add" onClick={handleOpen}>
+                <AddIcon />
+            </Fab>
+            <NewNote open={modal} onClose={handleClose} />
         </div>
     )
 }

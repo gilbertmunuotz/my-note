@@ -12,4 +12,8 @@ interface SpinnerProps {
     loading: boolean;
 }
 
-export type { FetchedNotes, SpinnerProps };
+interface AddNotes {
+    open: boolean,
+    onClose: () => void;
+}
+export type { FetchedNotes, SpinnerProps, AddNotes };
