@@ -1,4 +1,5 @@
 import Home from "./pages/Home";
+import Edit from "./pages/EditNote";
 import NotFound from './components/NotFound';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
@@ -8,6 +9,7 @@ function App() {
 
   const router = createBrowserRouter([
     { path: '/', element: <Home />, errorElement: <NotFound /> },
+    { path: '/note/:id', element: <Edit />, errorElement: <NotFound /> },
   ]);
 
   return (

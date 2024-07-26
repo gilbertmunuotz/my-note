@@ -1,74 +1,85 @@
 import NewNote from './AddNote';
-import { Fab } from "@mui/material";
-import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import EditNote from './EditNote';
+import { toast } from 'react-toastify';
+import { useState, useEffect } from "react";
 import Spinner from "../components/Spinner";
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import { Fab, IconButton } from "@mui/material";
+import { Note } from "../Interfaces/Interfaces";
 import { formatDate } from "../utilities/Datefunc";
-import { FetchedNotes } from "../Interfaces/Interfaces";
+import { useGetNotesQuery } from '../app/APISlice';
 
 function Home() {
+    const [modalOpen, setModalOpen] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [notes, setNotes] = useState<Note[]>([]);
+    const { data, isLoading, isError } = useGetNotesQuery();
 
-    const [notes, setNotes] = useState<FetchedNotes[]>([]);
-    const [modal, setModal] = useState(false);
-    const [isloading, setIsLoading] = useState(true);
-    const url = `/api/notes/all`;
+    const handleOpen = () => setModalOpen(true);
+    const handleClose = () => setModalOpen(false);
 
-    const handleOpen = () => setModal(true);
-    const handleClose = () => setModal(false);
+    const handleEditOpen = () => setEditModalOpen(true);
+    const handleEditClose = () => setEditModalOpen(false);
 
     useEffect(() => {
-        setTimeout(() => {
-            async function fetchData() {
-                setIsLoading(true);
-                try {
-                    const response = await fetch(url, { method: 'GET' });
-                    const data = await response.json();
-                    setNotes(data.Notes); //Update The notes variable
-                } catch (error) {
-                    console.error('Error Fetching Data', error);
-                    throw error; // Throw the error to be caught by toast.promise
-                } finally {
-                    setIsLoading(false); // Set loading to false regardless of success or error
-                }
-            }
-            //Handling Promises By React Toastify
-            toast.promise(fetchData(), {
-                pending: 'Fetching Notes...',
-                success: 'Notes fetched Successfully',
-                error: 'Failed to fetch. Please try again.',
-            });
-        }, 3 * 1000); // Set Timeout for 3 Seconds
-    }, [url]);
+        if (data) {
+            setNotes(data.Notes);
+            toast.success("Notes Fetched Successfully!");
+        }
+    }, [data]);
 
+    if (isError) {
+        toast.error("Sorry, an error occurred.");
+    }
 
     return (
-        <div className="p-4">
-            {isloading ? (
-                <Spinner loading={isloading} /> //Pass loading state to Spinner component
+        <div className="p-4 relative min-h-screen">
+            {isLoading ? (
+                <Spinner loading={isLoading} />
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 mb-4">
-                    {notes.map(note => (
-                        <div key={note._id} className="p-4 rounded-md" style={{ background: '#828E8C' }}>
-                            <h1 className="text-xl font-bold mb-2">{note.title}</h1>
-                            <p className="text-gray-700">{note.text}</p>
-                            <section className="text-left text-sm sm:text-right sm:text-base border-t-2 border-y-white space-y-2">
-                                {note.updatedAt > note.createdAt ? (
-                                    `Updated At: ${formatDate(note.updatedAt)}`
-                                ) : (
-                                    `${formatDate(note.createdAt)}`
-                                )}
-                            </section>
+                <>
+                    {notes.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 mb-4">
+                            {notes.map((note: Note) => (
+                                <div key={note._id} className="p-4 rounded-md" style={{ background: '#EDEAE0' }}>
+                                    <h1 className="text-xl font-bold mb-2">{note.title}</h1>
+                                    <p className="text-gray-700">{note.text}</p>
+                                    <section className="text-left text-sm flex justify-between sm:text-right sm:text-base border-t-2 border-y-white space-y-2">
+                                        <div className="icon mt-2 ">
+                                            <IconButton onClick={handleEditOpen}>
+                                                <EditIcon />
+                                            </IconButton>
+                                        </div>
+                                        <div className="timeStamp">
+                                            {note.updatedAt > note.createdAt ? (
+                                                `Updated At: ${formatDate(note.updatedAt)}`
+                                            ) : (
+                                                `${formatDate(note.createdAt)}`
+                                            )}
+                                        </div>
+                                    </section>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    ) : (
+                        <div className="min-h-screen flex items-center justify-center">
+                            <div className="text-center">
+                                No notes available
+                            </div>
+                        </div>
+                    )}
+                </>
             )}
-            <Fab color="primary" aria-label="add" onClick={handleOpen}>
-                <AddIcon />
-            </Fab>
-            <NewNote open={modal} onClose={handleClose} />
+            {!isLoading && (
+                <Fab color="primary" aria-label="add" onClick={handleOpen} style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
+                    <AddIcon />
+                </Fab>
+            )}
+            <NewNote open={modalOpen} onClose={handleClose} />
+            <EditNote open={editModalOpen} onClose={handleEditClose} />
         </div>
-    )
+    );
 }
 
 export default Home;

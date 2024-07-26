@@ -1,4 +1,4 @@
-interface FetchedNotes {
+interface Note {
     _id: string,
     title: string,
     text: string,
@@ -7,6 +7,14 @@ interface FetchedNotes {
     pinned: boolean;
 }
 
+interface FetchedNotes {
+    Quantity: number,
+    Notes: Note[];
+}
+
+export interface RouteParams {
+    _id: string
+}
 
 interface SpinnerProps {
     loading: boolean;
@@ -16,4 +24,5 @@ interface AddNotes {
     open: boolean,
     onClose: () => void;
 }
-export type { FetchedNotes, SpinnerProps, AddNotes };
+
+export type { Note, FetchedNotes, SpinnerProps, AddNotes };
