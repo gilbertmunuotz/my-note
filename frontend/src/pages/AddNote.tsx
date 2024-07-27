@@ -66,14 +66,18 @@ function AddNote({ open, onClose }: AddNotes) {
                                 onChange={(event) => setText(event.target.value)}
                             />
 
-                            <Button
-                                fullWidth
-                                type="submit"
-                                variant="contained"
-                                sx={{ mt: 2 }} className="rounded-xl"
-                            >
-                                {isLoading ? 'Savings....' : 'Save'}
-                            </Button>
+
+                            {isLoading ?
+                                <button
+                                    type="submit"
+                                    className="my-3 py-2 px-32 rounded-md cursor-not-allowed text-white uppercase" style={{ backgroundColor: '#1565c0' }}>Saving.......</button>
+                                : <Button
+                                    fullWidth
+                                    type="submit"
+                                    variant="contained"
+                                    sx={{ mt: 2 }} className="rounded-xl">Save</Button>
+                            }
+
                         </form>
                     </Box>
                 </Modal>
