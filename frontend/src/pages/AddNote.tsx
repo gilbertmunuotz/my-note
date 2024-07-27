@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { useAddNewNoteMutation } from "../app/APISlice";
+import { useAddNewNoteMutation } from "../api/notesAPISlice";
 import { AddNotes, Note } from "../Interfaces/Interfaces";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 
 function AddNote({ open, onClose }: AddNotes) {
 
-    const navigate = useNavigate();
     const [addNewNote, { isLoading, isError }] = useAddNewNoteMutation();
     const [text, setText] = useState<string>('');
     const [title, setTitle] = useState<string>('');
@@ -24,7 +22,7 @@ function AddNote({ open, onClose }: AddNotes) {
             setText('');
             setTitle('');
             onClose();
-            navigate("/");
+            toast.success("Note Added Succesfully");
         } catch (error) {
             console.error("Error Saving New Note");
             toast.error("Sorry, an error occurred.");
