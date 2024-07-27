@@ -31,7 +31,7 @@ export const notesAPISlice = createApi({
             }),
             invalidatesTags: ['Notes'],
         }),
-        getNoteId: builder.query<Note, void>({
+        getNoteId: builder.query<Note, string>({
             query: (_id) => ({
                 url: `/api/notes/note/${_id}`,
                 method: 'GET'
@@ -40,7 +40,7 @@ export const notesAPISlice = createApi({
         }),
         updateNote: builder.mutation<void, Note>({
             query: (note_id) => ({
-                url: `/api/notes/update/${note_id._id}`,
+                url: `/api/notes/update/${note_id}`,
                 method: 'PUT',
                 body: note_id,
             }),

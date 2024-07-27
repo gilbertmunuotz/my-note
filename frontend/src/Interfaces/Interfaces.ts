@@ -12,10 +12,6 @@ interface FetchedNotes {
     Notes: Note[];
 }
 
-export interface RouteParams {
-    _id: string
-}
-
 interface SpinnerProps {
     loading: boolean;
 }
@@ -25,4 +21,8 @@ interface AddNotes {
     onClose: () => void;
 }
 
-export type { Note, FetchedNotes, SpinnerProps, AddNotes };
+interface EditNoteProps extends AddNotes {
+    noteId: string
+}
+
+export type { Note, FetchedNotes, SpinnerProps, AddNotes, EditNoteProps };

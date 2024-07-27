@@ -1,18 +1,49 @@
-import { useState } from 'react';
-import { AddNotes } from "../Interfaces/Interfaces";
+import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import { EditNoteProps } from "../Interfaces/Interfaces";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import { useGetNoteIdQuery, useUpdateNoteMutation } from '../app/APISlice';
 
 
-function EditNote({ open, onClose }: AddNotes) {
-
+function EditNote({ open, onClose, noteId }: EditNoteProps) {
     // Initialize Hooks
+    const { data: note, isError } = useGetNoteIdQuery(noteId!, { skip: !noteId });
+    const [updateNote, { isLoading: isUpdating }] = useUpdateNoteMutation();
 
     // Manage state for form inputs 
     const [text, setText] = useState<string>('');
     const [title, setTitle] = useState<string>('');
 
-    // Populate form state with the fetched todo data on initial render
+    // Populate form state with the fetched Note data on initial render
+    useEffect(() => {
+        if (note) {
+            setText(note.text);
+            setTitle(note.title);
+        }
+    }, [note])
 
+    // Handle form submission to update Note
+    async function handleSubmit(event: React.FormEvent) {
+        event.preventDefault();
+
+        try {
+            await updateNote({
+
+            }).unwrap();
+            toast.success("Note updated successfully!");
+            onClose();
+        } catch (error) {
+            console.error("Error Updating Note", error);
+            toast.error("Error Occured, Try Again");
+        }
+    }
+
+
+    // Handle Errors if Any
+    if (isError) {
+        console.error("Error Occurred");
+        toast.error("Sorry, an error occurred.");
+    }
 
     return (
         <div>
@@ -22,7 +53,7 @@ function EditNote({ open, onClose }: AddNotes) {
                         <Typography className="text-center">
                             Edit Note
                         </Typography>
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth
                                 required
@@ -43,14 +74,16 @@ function EditNote({ open, onClose }: AddNotes) {
                                 onChange={(event) => setText(event.target.value)}
                             />
 
-                            <Button
-                                fullWidth
-                                type="submit"
-                                variant="contained"
-                                sx={{ mt: 2 }} className="rounded-xl"
-                            >
-                                Update
-                            </Button>
+
+                            {isUpdating ?
+                                <button
+                                    className="my-2 py-2 px-32 rounded-md cursor-not-allowed text-white uppercase" style={{ backgroundColor: '#1565c0' }}>Updating.</button>
+                                : <Button
+                                    fullWidth
+                                    type="submit"
+                                    variant="contained"
+                                    sx={{ mt: 2 }} className="rounded-xl">Update</Button>
+                            }
                         </form>
                     </Box>
                 </Modal>
@@ -59,4 +92,4 @@ function EditNote({ open, onClose }: AddNotes) {
     )
 }
 
-export default EditNote
+export default EditNote;

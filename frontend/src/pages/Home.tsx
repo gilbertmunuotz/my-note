@@ -11,15 +11,18 @@ import { formatDate } from "../utilities/Datefunc";
 import { useGetNotesQuery } from '../app/APISlice';
 
 function Home() {
-    const [modalOpen, setModalOpen] = useState(false);
-    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false); // Manage Add Modal
+    const [editModalOpen, setEditModalOpen] = useState(false); // Manages the open/close state of the edit modal.
+    const [selectedNoteId, setSelectedNoteId] = useState<string>(''); // Stores the ID of the note being edited
     const [notes, setNotes] = useState<Note[]>([]);
     const { data, isLoading, isError } = useGetNotesQuery();
 
     const handleOpen = () => setModalOpen(true);
-    const handleClose = () => setModalOpen(false);
+    // Closes both the add and edit modals and resets the selectedNoteId.
+    const handleClose = () => { setModalOpen(false); setEditModalOpen(false); };
 
-    const handleEditOpen = () => setEditModalOpen(true);
+    //  Sets the selectedNoteId and opens the edit modal.
+    const handleEditOpen = (noteId: string) => { setSelectedNoteId(noteId); setEditModalOpen(true); };
     const handleEditClose = () => setEditModalOpen(false);
 
     useEffect(() => {
@@ -30,6 +33,7 @@ function Home() {
     }, [data]);
 
     if (isError) {
+        console.error("Error Occurred");
         toast.error("Sorry, an error occurred.");
     }
 
@@ -47,7 +51,7 @@ function Home() {
                                     <p className="text-gray-700">{note.text}</p>
                                     <section className="text-left text-sm flex justify-between sm:text-right sm:text-base border-t-2 border-y-white space-y-2">
                                         <div className="icon mt-2 ">
-                                            <IconButton onClick={handleEditOpen}>
+                                            <IconButton onClick={() => handleEditOpen(note._id)}>
                                                 <EditIcon />
                                             </IconButton>
                                         </div>
@@ -77,7 +81,7 @@ function Home() {
                 </Fab>
             )}
             <NewNote open={modalOpen} onClose={handleClose} />
-            <EditNote open={editModalOpen} onClose={handleEditClose} />
+            <EditNote open={editModalOpen} onClose={handleEditClose} noteId={selectedNoteId} />
         </div>
     );
 }
