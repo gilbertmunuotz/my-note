@@ -1,10 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FetchedNotes, Note } from "../Interfaces/Interfaces";
-
-const URL = `http://localhost:8000`;
+import { USERS_URL } from "../config/constants";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: URL
+    baseUrl: USERS_URL
 });
 
 export const notesAPISlice = createApi({
@@ -39,14 +38,21 @@ export const notesAPISlice = createApi({
             providesTags: ['Notes']
         }),
         updateNote: builder.mutation<void, Note>({
-            query: (note_id) => ({
-                url: `/api/notes/update/${note_id}`,
+            query: (note) => ({
+                url: `/api/notes/update/${note._id}`,
                 method: 'PUT',
-                body: note_id,
+                body: note,
             }),
             invalidatesTags: ['Notes']
         }),
+        deleteNote: builder.mutation<void, string>({
+            query: (_id) => ({
+                url: `/api/notes/delete/${_id}`,
+                method: 'DELETE'
+            }),
+            invalidatesTags: ['Notes']
+        })
     })
 });
 
-export const { useGetNotesQuery, useAddNewNoteMutation, useGetNoteIdQuery, useUpdateNoteMutation } = notesAPISlice;
+export const { useGetNotesQuery, useAddNewNoteMutation, useGetNoteIdQuery, useUpdateNoteMutation, useDeleteNoteMutation } = notesAPISlice;

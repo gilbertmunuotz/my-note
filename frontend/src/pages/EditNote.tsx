@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import { EditNoteProps } from "../Interfaces/Interfaces";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
-import { useGetNoteIdQuery, useUpdateNoteMutation } from '../app/APISlice';
+import { useGetNoteIdQuery, useUpdateNoteMutation } from '../api/notesAPISlice';
 
 
 function EditNote({ open, onClose, noteId }: EditNoteProps) {
@@ -27,9 +27,7 @@ function EditNote({ open, onClose, noteId }: EditNoteProps) {
         event.preventDefault();
 
         try {
-            await updateNote({
-
-            }).unwrap();
+            await updateNote({ _id: noteId, title, text }).unwrap();
             toast.success("Note updated successfully!");
             onClose();
         } catch (error) {
