@@ -4,11 +4,11 @@ import { toast } from 'react-toastify';
 import { useState, useEffect } from "react";
 import Spinner from "../components/Spinner";
 import AddIcon from '@mui/icons-material/Add';
-import { Fab, IconButton } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import { Note } from "../Interfaces/Interfaces";
 import { formatDate } from "../utilities/Datefunc";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Fab, IconButton, Tooltip } from "@mui/material";
 import { useGetNotesQuery, useDeleteNoteMutation } from '../api/notesAPISlice';
 
 function Home() {
@@ -68,10 +68,14 @@ function Home() {
                                     <section className="text-left text-sm flex justify-between sm:text-right sm:text-base border-t-2 border-y-white space-y-2">
                                         <div className="icon mt-2 ">
                                             <IconButton onClick={() => note._id && handleEditOpen(note._id)}>
-                                                <EditIcon />
+                                                <Tooltip title="Edit">
+                                                    <EditIcon />
+                                                </Tooltip>
                                             </IconButton>
                                             <IconButton onClick={() => note._id && handleDelete(note._id)} style={{ color: '#FF0000' }}>
-                                                <DeleteIcon />
+                                                <Tooltip title="Delete">
+                                                    <DeleteIcon />
+                                                </Tooltip>
                                             </IconButton>
                                         </div>
                                         <div className="timeStamp">
@@ -99,9 +103,11 @@ function Home() {
                 </>
             )}
             {!isLoading && (
-                <Fab color="primary" aria-label="add" onClick={handleOpen} style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
-                    <AddIcon />
-                </Fab>
+                <Tooltip title="New" style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
+                    <Fab color="primary" aria-label="add" onClick={handleOpen}>
+                        <AddIcon />
+                    </Fab>
+                </Tooltip>
             )}
             <NewNote open={modalOpen} onClose={handleClose} />
             <EditNote open={editModalOpen} onClose={handleEditClose} noteId={selectedNoteId} />
