@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FetchedNotes, Note } from "../Interfaces/Interfaces";
-import { USERS_URL } from "../config/constants";
+import { SERVER_API } from "../config/constants";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: USERS_URL
+    baseUrl: SERVER_API
 });
 
 export const notesAPISlice = createApi({
@@ -50,7 +50,6 @@ export const notesAPISlice = createApi({
                 url: `/api/notes/delete/${_id}`,
                 method: 'DELETE'
             }),
-            invalidatesTags: ['Notes']
         })
     })
 });

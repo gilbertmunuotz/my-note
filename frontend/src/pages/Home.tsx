@@ -39,6 +39,8 @@ function Home() {
         if (window.confirm("This Action is Irreversible!")) {
             try {
                 await deleteNote(_id).unwrap();
+                // Update the notes state after deletion
+                setNotes(notes.filter(note => note._id !== _id));
                 toast.success("Note deleted successfully");
             } catch (error) {
                 console.error('Failed to delete Note: ', error);
