@@ -13,3 +13,12 @@ export interface UNotes {
   text: string,
   pinned: boolean;
 }
+
+export interface User {
+  name?: string,
+  email: string,
+  password?: string,
+  googleId?: string,
+  displayName?: string,
+  photos?: string[];
+}
