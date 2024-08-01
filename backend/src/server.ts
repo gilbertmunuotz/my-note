@@ -2,11 +2,13 @@ import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors'
+import { USERS_URL } from "./constants/constant";
 const envPath = path.resolve(__dirname, '../env', 'development.env');
 dotenv.config({ path: envPath });
 import EnvVars from './constants/EnvVars';
 import mongoose from 'mongoose';
 import NotesRoute from './routes/NotesRoute';
+import AuthUserRoutes from './routes/UserRoutes';
 import { Request, Response, NextFunction } from "express";
 import HttpStatusCodes from './constants/HttpStatusCodes'
 
@@ -30,7 +32,7 @@ const app = express();
 // Add your Middlewares & Other Logics Here
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: `${USERS_URL}`,
 }));
 
 
@@ -47,7 +49,7 @@ app.get('/api', (req: Request, res: Response, next: NextFunction) => {
 
 //Define Routes Here
 app.use('/api/notes', NotesRoute); //Note Related Routes
-
+app.use('/v1/Auth', AuthUserRoutes); //Auth User Related Routes
 
 // Listen to Server Response
 const port = EnvVars.Port;
