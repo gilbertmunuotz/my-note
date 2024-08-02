@@ -11,7 +11,8 @@ import NotesRoute from './routes/NotesRoute';
 import AuthUserRoutes from './routes/UserRoutes';
 import { Request, Response, NextFunction } from "express";
 import HttpStatusCodes from './constants/HttpStatusCodes'
-
+import passport from 'passport';
+import './utilities/Passport-config';
 //Connect to MongoDB
 async function connectToMongo() {
   try {
@@ -31,10 +32,8 @@ const app = express();
 
 // Add your Middlewares & Other Logics Here
 app.use(express.json());
-app.use(cors({
-  origin: `${USERS_URL}`,
-}));
-
+app.use(cors({ origin: `${USERS_URL}`, }));
+app.use(passport.initialize());
 
 //Test Sample Route
 app.get('/api', (req: Request, res: Response, next: NextFunction) => {
