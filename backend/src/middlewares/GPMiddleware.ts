@@ -1,11 +1,9 @@
 import passport from "passport";
 import { Strategy as GoogleStratergy } from 'passport-google-oauth20';
-import { Strategy as LocalStratergy } from "passport-local";
-import dotenv from 'dotenv';
 import { USERS_URL } from '../constants/constant';
 import UserModel from '../models/User';
-import bcrypt from 'bcryptjs';
 import { User } from '../constants/Interfaces';
+import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
@@ -47,35 +45,6 @@ passport.use(new GoogleStratergy({
     }
 ));
 
-
-// Local Strategy
-passport.use(new LocalStratergy({
-    usernameField: 'email',
-    passwordField: 'Password'
-}, async (email, password, done) => {
-    try {
-        const user = await UserModel.findOne({ email });
-
-        if (!user) {
-            return done(null, false, { message: 'User not Found' });
-        }
-
-        // If user found but doesn't have a password 
-        if (!user.password) {
-            return done(null, false, { message: 'Email registered via Google. Use Google Account to login' });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return done(null, false, { message: 'Incorrect password' });
-        }
-
-        return done(null, user);
-    } catch (error) {
-        return done(error);
-    }
-}));
 
 // Serialization and deserialization of user
 passport.serializeUser((user, done) => {
