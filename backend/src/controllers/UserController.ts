@@ -5,6 +5,7 @@ import { generateAccessToken, generateRefreshToken } from "../utilities/jwtToken
 import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
 import { User } from '../constants/Interfaces';
+import { USERS_URL } from '../constants/constant';
 
 //(DESC) Google OAuth callback
 async function OAuth20(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -17,27 +18,23 @@ async function OAuth20(req: Request, res: Response, next: NextFunction): Promise
             return res.redirect('/login');
         }
 
-        req.logIn(user, (err) => {
-            if (err) {
-                return next(err);
-            }
-
+        try {
             // Generate tokens
-            const accessToken = generateAccessToken(req.user);
-            const refreshToken = generateRefreshToken(req.user);
+            const accessToken = generateAccessToken(user);
+            const refreshToken = generateRefreshToken(user);
 
-            // Set tokens in cookies or send them in the response
+            // Set tokens in cookies and send them in the response
             res.cookie('accessToken', accessToken, { httpOnly: true });
             res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
-            // Redirect to the home page
-            return res.redirect('/all');
-        });
+            // Redirect to the frontend home page
+            res.redirect(`${USERS_URL}/home`);
 
-        // Redirect to the home page
-        res.redirect('/all');
-    });
-};
+        } catch (error) {
+            return next(error);
+        }
+    })(req, res, next); // Return invoked middlewares
+}
 
 
 //(DESC) Passport Local registration User
@@ -111,7 +108,7 @@ async function Logout(req: Request, res: Response, next: NextFunction) {
     } catch (error) {
         return res.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'Logout Error' });
     }
-    
+
 }
 
 export { OAuth20, Registration, Login, Logout };

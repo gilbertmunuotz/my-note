@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleStratergy } from 'passport-google-oauth20';
-import { USERS_URL } from '../constants/constant';
+import { SERVER_API } from '../constants/constant';
 import UserModel from '../models/User';
 import { User } from '../constants/Interfaces';
 import dotenv from 'dotenv';
@@ -13,7 +13,7 @@ dotenv.config();
 passport.use(new GoogleStratergy({
     clientID: process.env.CLIENT_ID!,
     clientSecret: process.env.CLIENT_SECRET!,
-    callbackURL: `${USERS_URL}/auth/google/callback`,
+    callbackURL: `${SERVER_API}/v1/Auth/auth/google/callback`,
     scope: ['profile', 'email'], // Request profile and email data
 },
     async (accessToken, refreshToken, profile, done) => {
