@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import passport from '../middlewares/GPMiddleware';
 import validateLocalUser from '../middlewares/UserMiddleware';
 import { OAuth20, Registration, Login, Logout } from '../controllers/UserController';
 
@@ -8,7 +9,7 @@ const router = Router();
 
 
 /* Google OAuth login route */
-// router.get('/auth/google');
+router.get('/auth/google', passport.authenticate('google'));
 
 
 /* Google OAuth callback route */
