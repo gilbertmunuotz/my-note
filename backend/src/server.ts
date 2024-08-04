@@ -7,12 +7,15 @@ const envPath = path.resolve(__dirname, '../env', 'development.env');
 dotenv.config({ path: envPath });
 import EnvVars from './constants/EnvVars';
 import mongoose from 'mongoose';
+import cookieparser from "cookie-parser";
 import NotesRoute from './routes/NotesRoute';
 import AuthUserRoutes from './routes/UserRoutes';
 import { Request, Response, NextFunction } from "express";
 import HttpStatusCodes from './constants/HttpStatusCodes'
 import passport from 'passport';
-import './utilities/Passport-config';
+import './middlewares/passport-config.ts'
+
+
 //Connect to MongoDB
 async function connectToMongo() {
   try {
@@ -33,6 +36,7 @@ const app = express();
 // Add your Middlewares & Other Logics Here
 app.use(express.json());
 app.use(cors({ origin: `${USERS_URL}`, }));
+app.use(cookieparser());
 app.use(passport.initialize());
 
 //Test Sample Route

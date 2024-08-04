@@ -22,4 +22,4 @@ async function validateLocalUser(req: Request, res: Response, next: NextFunction
 }
 
 //Export Default Constant
-export default validateLocalUser;
+export { validateLocalUser };

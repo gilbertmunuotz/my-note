@@ -1,16 +1,42 @@
 import passport from "passport";
-import { Strategy as GoogleStratergy } from 'passport-google-oauth20';
-import { SERVER_API } from '../constants/constant';
-import UserModel from '../models/User';
-import { User } from '../constants/Interfaces';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import dotenv from 'dotenv';
+import UserModel from '../models/User';
+import bcrypt from 'bcryptjs';
+import { SERVER_API } from '../constants/constant';
+import { User } from '../constants/Interfaces';
 
 // Load environment variables
 dotenv.config();
 
+// Local Strategy
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+}, async (email, password, done) => {
+    try {
+        const user = await UserModel.findOne({ email });
+        if (!user) {
+            return done(null, false, { message: 'User not found' });
+        }
+        if (!user.password) {
+            return done(null, false, { message: 'Email Already registered, Continue with Google' });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return done(null, false, { message: 'Incorrect password' });
+        }
+        return done(null, user);
+    } catch (error) {
+        return done(error);
+    }
+}));
+
+
 
 // Google OAuth Strategy
-passport.use(new GoogleStratergy({
+passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID!,
     clientSecret: process.env.CLIENT_SECRET!,
     callbackURL: `${SERVER_API}/v1/Auth/auth/google/callback`,
@@ -44,6 +70,7 @@ passport.use(new GoogleStratergy({
         }
     }
 ));
+
 
 
 // Serialization and deserialization of user
