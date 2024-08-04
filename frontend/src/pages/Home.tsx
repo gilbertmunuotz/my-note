@@ -8,8 +8,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Note } from "../Interfaces/Interfaces";
 import { formatDate } from "../utilities/Datefunc";
 import DeleteIcon from '@mui/icons-material/Delete';
+// import PushPinIcon from '@mui/icons-material/PushPin';
 import { Fab, IconButton, Tooltip } from "@mui/material";
-import { useGetNotesQuery, useDeleteNoteMutation } from '../api/notesAPISlice';
+import { useGetNotesQuery, useDeleteNoteMutation,
+    //  usePinNoteMutation
+     } from '../api/notesAPISlice';
 
 function Home() {
     const [modalOpen, setModalOpen] = useState(false); // Manage Add Modal
@@ -18,6 +21,7 @@ function Home() {
     const [notes, setNotes] = useState<Note[]>([]);
     const { data, isLoading, isError } = useGetNotesQuery();
     const [deleteNote] = useDeleteNoteMutation();
+    // const [pinNote] = usePinNoteMutation();
 
     const handleOpen = () => setModalOpen(true);
     const handleClose = () => { setModalOpen(false); setEditModalOpen(false); };// Closes both the add and edit modals and resets the selectedNoteId.
@@ -32,6 +36,17 @@ function Home() {
             setNotes(data.Notes);
         }
     }, [data]);
+
+
+    // //Pin Note logic
+    // async function PinNote(_id: string) {
+    //     try {
+    //         await pinNote(_id).unwrap();
+    //     } catch (error) {
+    //         console.error("Error Pinning Note", error);
+    //         toast.error("Error Pinning Note");
+    //     }
+    // }
 
 
     //Delete Note Logic
@@ -65,7 +80,12 @@ function Home() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 mb-4">
                             {notes.map((note: Note) => (
                                 <div key={note._id} className="p-4 rounded-md" style={{ background: '#EDEAE0' }}>
-                                    <h1 className="text-xl font-bold mb-2">{note.title}</h1>
+                                    <div className="flex justify-between">
+                                        <h1 className="text-xl font-bold mb-2">{note.title}</h1>
+                                       {/* <button type="button" onClick={() => PinNote(note._id)}>
+
+                                       </button> */}
+                                    </div>
                                     <p className="text-gray-700">{note.text}</p>
                                     <section className="text-left text-sm flex justify-between sm:text-right sm:text-base border-t-2 border-y-white space-y-2">
                                         <div className="icon mt-2 ">

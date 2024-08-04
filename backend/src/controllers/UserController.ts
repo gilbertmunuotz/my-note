@@ -1,43 +1,34 @@
 import { Request, Response, NextFunction } from 'express';
-import passport from 'passport';
 import HttpStatusCodes from '../constants/HttpStatusCodes';
 import { generateAccessToken, generateRefreshToken } from "../utilities/jwtToken";
 import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
-import { User } from '../constants/Interfaces';
 import { USERS_URL } from '../constants/constant';
+
 
 //(DESC) Google OAuth callback
 async function OAuth20(req: Request, res: Response, next: NextFunction): Promise<void> {
-    passport.authenticate('google', { failureRedirect: '/login' }, (error, user) => {
-        if (error) {
-            return next(error);
-        }
+    const user = req.user;
 
-        if (!user) {
-            return res.redirect('/login');
-        }
+    try {
+        // Generate tokens
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
 
-        try {
-            // Generate tokens
-            const accessToken = generateAccessToken(user);
-            const refreshToken = generateRefreshToken(user);
+        // Set tokens in cookies and send them in the response
+        res.cookie('accessToken', accessToken, { httpOnly: true });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
-            // Set tokens in cookies and send them in the response
-            res.cookie('accessToken', accessToken, { httpOnly: true });
-            res.cookie('refreshToken', refreshToken, { httpOnly: true });
+        // Redirect to the frontend home page
+        res.redirect(`${USERS_URL}/home`);
 
-            // Redirect to the frontend home page
-            res.redirect(`${USERS_URL}/home`);
-
-        } catch (error) {
-            return next(error);
-        }
-    })(req, res, next); // Return invoked middlewares
-}
+    } catch (error) {
+        return next(error);
+    }
+};
 
 
-//(DESC) Passport Local registration User
+//(DESC) Passport Local User registration 
 async function Registration(req: Request, res: Response, next: NextFunction) {
 
     // Destructre req.body
@@ -65,24 +56,14 @@ async function Registration(req: Request, res: Response, next: NextFunction) {
     } catch (error) {
         next(error);
     }
-
 }
 
 
-//(DESC) Passport Local login User
+//(DESC) Passport Local User login 
 async function Login(req: Request, res: Response, next: NextFunction) {
 
-    passport.authenticate('local', { session: false }, (error: any, user: User, info: { message: string }) => {
-
-        if (!user) {
-            return res.status(HttpStatusCodes.BAD_REQUEST).json({ message: info ? info.message : 'Login failed', user })
-        }
-
-        req.login(user, { session: false }, async (error) => {
-            if (error) {
-                return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Server Error' })
-            }
-        })
+    try {
+        const user = req.user;
 
         // Generate tokens
         const accessToken = generateAccessToken(user);
@@ -93,7 +74,15 @@ async function Login(req: Request, res: Response, next: NextFunction) {
         res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
         return res.status(HttpStatusCodes.OK).json({ message: 'Login successful', accessToken, refreshToken });
-    })(req, res, next);
+    } catch (error) {
+        return next(error);
+    }
+};
+
+
+//(DESC) Check If User Is Logged
+async function IsLogged(req: Request, res: Response, next: NextFunction) {
+    res.status(HttpStatusCodes.OK).json({ message: 'This is a protected route', user: req.user });
 }
 
 
@@ -111,4 +100,5 @@ async function Logout(req: Request, res: Response, next: NextFunction) {
 
 }
 
-export { OAuth20, Registration, Login, Logout };
+
+export { OAuth20, Registration, Login, IsLogged, Logout };

@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { FetchedNotes, Note } from "../Interfaces/Interfaces";
+import { FetchedNotes, Note,
+    //  Pinning 
+    } from "../Interfaces/Interfaces";
 import { SERVER_API } from "../config/constants";
 
 const baseQuery = fetchBaseQuery({
@@ -50,8 +52,18 @@ export const notesAPISlice = createApi({
                 url: `/api/notes/delete/${_id}`,
                 method: 'DELETE'
             }),
-        })
+        }),
+        // pinNote: builder.mutation<Pinning, string>({
+        //     query: (_id) => ({
+        //         url: `/api/notes/pin/${_id}`,
+        //         method: 'PATCH'
+        //     })
+        // }),
     })
 });
 
-export const { useGetNotesQuery, useAddNewNoteMutation, useGetNoteIdQuery, useUpdateNoteMutation, useDeleteNoteMutation } = notesAPISlice;
+export const { useGetNotesQuery, useAddNewNoteMutation,
+    useGetNoteIdQuery, useUpdateNoteMutation,
+    useDeleteNoteMutation,
+    //  usePinNoteMutation 
+    } = notesAPISlice;
