@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import passport from '../middlewares/passport-config.ts';
-import { validateLocalUser } from '../middlewares/UserMiddleware';
+import { validateLocalUser } from '../middlewares/userMiddleware';
 import { localVerify, googleVerify, checkAuth } from '../middlewares/authMiddleware';
 import { OAuth20, Registration, Login, IsLogged, Logout } from '../controllers/UserController';
 

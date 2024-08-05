@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 import { GoogleOriginal } from 'devicons-react';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, Modal, Box, Typography, TextField, InputAdornment, IconButton } from '@mui/material';
 
 function LoginPage() {
@@ -36,7 +37,7 @@ function LoginPage() {
                     </Button>
 
                     <hr className='my-3 border-y- border-black' />
-                    <p className='text-md font-semibold ml-40 leading-loose mb-1'>Or</p>
+                    <p className='text-md font-semibold ml-40 leading-8 mb-1'>Or</p>
 
 
                     <Button variant="outlined" fullWidth
@@ -46,6 +47,8 @@ function LoginPage() {
                             <p>Continue with Google.</p>
                         </div>
                     </Button>
+
+                    <h5 className='font-semibold ml-2 mt-2'>Dont't have an account.? Register <Link to={"/register"} className='text-sky-600'>Here</Link></h5>
                 </Box>
             </Modal>
         </div>

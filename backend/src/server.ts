@@ -35,7 +35,11 @@ const app = express();
 
 // Add your Middlewares & Other Logics Here
 app.use(express.json());
-app.use(cors({ origin: `${USERS_URL}`, }));
+app.use(cors({
+  origin: `${USERS_URL}`,
+  methods: ["GET", "PUT", "POST", "PATCH", "DELETE"],
+  credentials: true
+}));
 app.use(cookieparser());
 app.use(passport.initialize());
 
