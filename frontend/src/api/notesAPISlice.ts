@@ -1,11 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { FetchedNotes, Note,
-    //  Pinning 
-    } from "../Interfaces/Interfaces";
+import { FetchedNotes, Note, } from "../Interfaces/Interfaces";
 import { SERVER_API } from "../config/constants";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: SERVER_API
+    baseUrl: `${SERVER_API}/api/notes`
 });
 
 export const notesAPISlice = createApi({
@@ -19,14 +17,14 @@ export const notesAPISlice = createApi({
 
         getNotes: builder.query<FetchedNotes, void>({
             query: () => ({
-                url: `/api/notes/all`,
+                url: `/all`,
                 method: 'GET'
             }),
             providesTags: ['Notes'],
         }),
         addNewNote: builder.mutation<void, Note>({
             query: (note) => ({
-                url: `/api/notes/new`,
+                url: `/new`,
                 method: 'POST',
                 body: note,
             }),
@@ -34,14 +32,14 @@ export const notesAPISlice = createApi({
         }),
         getNoteId: builder.query<Note, string>({
             query: (_id) => ({
-                url: `/api/notes/note/${_id}`,
+                url: `/note/${_id}`,
                 method: 'GET'
             }),
             providesTags: ['Notes']
         }),
         updateNote: builder.mutation<void, Note>({
             query: (note) => ({
-                url: `/api/notes/update/${note._id}`,
+                url: `/update/${note._id}`,
                 method: 'PUT',
                 body: note,
             }),
@@ -49,21 +47,12 @@ export const notesAPISlice = createApi({
         }),
         deleteNote: builder.mutation<void, string>({
             query: (_id) => ({
-                url: `/api/notes/delete/${_id}`,
+                url: `/delete/${_id}`,
                 method: 'DELETE'
             }),
         }),
-        // pinNote: builder.mutation<Pinning, string>({
-        //     query: (_id) => ({
-        //         url: `/api/notes/pin/${_id}`,
-        //         method: 'PATCH'
-        //     })
-        // }),
     })
 });
 
-export const { useGetNotesQuery, useAddNewNoteMutation,
-    useGetNoteIdQuery, useUpdateNoteMutation,
-    useDeleteNoteMutation,
-    //  usePinNoteMutation 
-    } = notesAPISlice;
+
+export const { useGetNotesQuery, useAddNewNoteMutation, useGetNoteIdQuery, useUpdateNoteMutation, useDeleteNoteMutation, } = notesAPISlice;

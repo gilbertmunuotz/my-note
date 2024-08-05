@@ -25,10 +25,14 @@ interface EditNoteProps extends AddNotes {
     noteId: string
 }
 
-// interface Pinning {
-//     pin: boolean
-// }
+interface Credentials {
+    name: string,
+    email: string,
+    password: string
+}
 
-export type { Note, FetchedNotes, SpinnerProps, AddNotes, EditNoteProps,
-    //  Pinning
-     };
+interface UserInfo {
+    email: string,
+    password: string
+}
+export type { Note, FetchedNotes, SpinnerProps, AddNotes, EditNoteProps, Credentials, UserInfo };
