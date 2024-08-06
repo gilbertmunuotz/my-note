@@ -45,7 +45,7 @@ function RegisterPage() {
             toast.success("Login To Continue");
             navigate("/login")
         } catch (error) {
-            console.error("Error Loggin In");
+            console.error("Error Registering", error);
             toast.error("Error Occured, Try Later");
         }
     }
