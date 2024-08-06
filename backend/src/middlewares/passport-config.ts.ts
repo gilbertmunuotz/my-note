@@ -18,10 +18,10 @@ passport.use(new LocalStrategy({
     try {
         const user = await UserModel.findOne({ email });
         if (!user) {
-            return done(null, false, { message: 'User not found' });
+            return done(null, false, { message: 'User Not Found.!' });
         }
         if (!user.password) {
-            return done(null, false, { message: 'Email Already registered, Continue with Google' });
+            return done(null, false, { message: 'Email Exists, Continue Via Google' });
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {

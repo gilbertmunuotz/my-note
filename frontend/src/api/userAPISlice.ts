@@ -3,7 +3,8 @@ import { SERVER_API } from "../config/constants";
 import { Credentials, UserInfo } from '../Interfaces/Interfaces';
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: `${SERVER_API}/v1/Auth`
+    baseUrl: `${SERVER_API}/v1/Auth`,
+    credentials: 'include'
 });
 
 
@@ -29,8 +30,24 @@ export const userAPISlice = createApi({
                 body: userInfo,
             }),
         }),
+
+        // Local Passport logout 
+        logout: builder.mutation<void, void>({
+            query: () => ({
+                url: `/logout`,
+                method: 'DELETE'
+            }),
+        }),
+
+        // Google OAuth 
+        googleStratergy: builder.query({
+            query: () => ({
+                url: `/auth/google/callback`,
+                method: 'GET',
+            }),
+        }),
     })
 })
 
 
-export const { useRegisterMutation, useLoginMutation } = userAPISlice;
+export const { useRegisterMutation, useLoginMutation, useLogoutMutation, useGoogleStratergyQuery } = userAPISlice;

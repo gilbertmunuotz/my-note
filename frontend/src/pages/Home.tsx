@@ -1,32 +1,37 @@
 import NewNote from './AddNote';
 import EditNote from './EditNote';
 import { toast } from 'react-toastify';
-import { useState, useEffect } from "react";
+import { useDispatch } from 'react-redux';
 import Spinner from "../components/Spinner";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { Note } from "../Interfaces/Interfaces";
+import { logoutSuccess } from '../api/authSlice';
+import React, { useState, useEffect } from "react";
 import { formatDate } from "../utilities/Datefunc";
+import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLogoutMutation } from '../api/userAPISlice';
 // import PushPinIcon from '@mui/icons-material/PushPin';
 import { Fab, IconButton, Tooltip } from "@mui/material";
-import { useGetNotesQuery, useDeleteNoteMutation,
-    //  usePinNoteMutation
-     } from '../api/notesAPISlice';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useGetNotesQuery, useDeleteNoteMutation } from '../api/notesAPISlice';
 
 function Home() {
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [modalOpen, setModalOpen] = useState(false); // Manage Add Modal
     const [editModalOpen, setEditModalOpen] = useState(false); // Manages the open/close state of the edit modal.
     const [selectedNoteId, setSelectedNoteId] = useState<string>(''); // Stores the ID of the note being edited
     const [notes, setNotes] = useState<Note[]>([]);
     const { data, isLoading, isError } = useGetNotesQuery();
     const [deleteNote] = useDeleteNoteMutation();
-    // const [pinNote] = usePinNoteMutation();
+    const [logout] = useLogoutMutation();
 
     const handleOpen = () => setModalOpen(true);
     const handleClose = () => { setModalOpen(false); setEditModalOpen(false); };// Closes both the add and edit modals and resets the selectedNoteId.
-
-
     const handleEditOpen = (noteId: string) => { setSelectedNoteId(noteId); setEditModalOpen(true); };//  Sets the selectedNoteId and opens the edit modal.
     const handleEditClose = () => setEditModalOpen(false);
 
@@ -36,17 +41,6 @@ function Home() {
             setNotes(data.Notes);
         }
     }, [data]);
-
-
-    // //Pin Note logic
-    // async function PinNote(_id: string) {
-    //     try {
-    //         await pinNote(_id).unwrap();
-    //     } catch (error) {
-    //         console.error("Error Pinning Note", error);
-    //         toast.error("Error Pinning Note");
-    //     }
-    // }
 
 
     //Delete Note Logic
@@ -64,6 +58,25 @@ function Home() {
         }
     }
 
+
+    // User Logout Logic
+    async function handleLogout(event: React.FormEvent) {
+        event.preventDefault();
+
+        try {
+            const user = await logout().unwrap();
+            dispatch(logoutSuccess(user));
+            toast.success("Logged Out Succesfully!");
+            navigate("/");
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            console.error('Error Logging Out', error);
+            if (error?.data?.message) {
+                toast.error(error.data.message);
+            }
+        }
+    }
+
     // Handle Any Errors if any
     if (isError) {
         console.error("Error Occurred");
@@ -76,15 +89,28 @@ function Home() {
                 <Spinner loading={isLoading} />
             ) : (
                 <>
+                    <div className="flex justify-between my-2 mx-6">
+                        <div className="logout">
+                            <Tooltip title="Log Out">
+                                <button onClick={handleLogout} className='text-base text-white px-5 py-1 rounded-3xl' style={{ background: '#1976D2' }}><LogoutIcon /></button>
+                            </Tooltip>
+                        </div>
+
+                        <div className="profile">
+                            <Tooltip title="Account">
+                                <Link to={"/me/profile"}>
+                                    <AccountCircleIcon sx={{ fontSize: 40 }} />
+                                </Link>
+                            </Tooltip>
+                        </div>
+                    </div>
+
                     {notes.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 mb-4">
                             {notes.map((note: Note) => (
                                 <div key={note._id} className="p-4 rounded-md" style={{ background: '#EDEAE0' }}>
                                     <div className="flex justify-between">
                                         <h1 className="text-xl font-bold mb-2">{note.title}</h1>
-                                       {/* <button type="button" onClick={() => PinNote(note._id)}>
-
-                                       </button> */}
                                     </div>
                                     <p className="text-gray-700">{note.text}</p>
                                     <section className="text-left text-sm flex justify-between sm:text-right sm:text-base border-t-2 border-y-white space-y-2">
