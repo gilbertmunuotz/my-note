@@ -30,24 +30,6 @@ async function localVerify(req: Request, res: Response, next: NextFunction) {
 }
 
 
-// Verify Google Passport User
-async function googleVerify(req: Request, res: Response, next: NextFunction) {
-    passport.authenticate('google', { failureRedirect: '/login' }, (error, user) => {
-        if (error) {
-            return next(error);
-        }
-
-        if (!user) {
-            return res.redirect('/login');
-        }
-
-        req.user = user;
-        next();
-
-    })(req, res, next);
-}
-
-
 // Check if user is Authenticated
 async function checkAuth(req: Request, res: Response, next: NextFunction) {
 
@@ -68,8 +50,7 @@ async function checkAuth(req: Request, res: Response, next: NextFunction) {
     } catch (error) {
         res.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'Invalid Token' });
     }
-
 }
 
 
-export { localVerify, googleVerify, checkAuth };
+export { localVerify, checkAuth };

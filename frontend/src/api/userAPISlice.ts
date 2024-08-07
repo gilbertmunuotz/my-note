@@ -21,7 +21,6 @@ export const userAPISlice = createApi({
                 body: credentials,
             }),
         }),
-
         // Local Passport Login
         login: builder.mutation<void, UserInfo>({
             query: (userInfo) => ({
@@ -30,7 +29,6 @@ export const userAPISlice = createApi({
                 body: userInfo,
             }),
         }),
-
         // Local Passport logout 
         logout: builder.mutation<void, void>({
             query: () => ({
@@ -38,16 +36,8 @@ export const userAPISlice = createApi({
                 method: 'DELETE'
             }),
         }),
-
-        // Google OAuth 
-        googleStratergy: builder.query({
-            query: () => ({
-                url: `/auth/google/callback`,
-                method: 'GET',
-            }),
-        }),
     })
 })
 
 
-export const { useRegisterMutation, useLoginMutation, useLogoutMutation, useGoogleStratergyQuery } = userAPISlice;
+export const { useRegisterMutation, useLoginMutation, useLogoutMutation } = userAPISlice;

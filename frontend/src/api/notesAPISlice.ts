@@ -51,8 +51,24 @@ export const notesAPISlice = createApi({
                 method: 'DELETE'
             }),
         }),
+        pinNote: builder.mutation<void, string>({
+            query: (note_id) => ({
+                url: `/pin/${note_id}`,
+                method: 'PATCH',
+            }),
+            invalidatesTags: ['Notes'],
+        }),
+        UnPinNote: builder.mutation<void, string>({
+            query: (note_id) => ({
+                url: `/unpin/${note_id}`,
+                method: 'PATCH'
+            }),
+            invalidatesTags: ['Notes']
+        }),
     })
 });
 
 
-export const { useGetNotesQuery, useAddNewNoteMutation, useGetNoteIdQuery, useUpdateNoteMutation, useDeleteNoteMutation, } = notesAPISlice;
+export const { useGetNotesQuery, useAddNewNoteMutation,
+    useGetNoteIdQuery, useUpdateNoteMutation,
+    useDeleteNoteMutation, usePinNoteMutation, useUnPinNoteMutation } = notesAPISlice;

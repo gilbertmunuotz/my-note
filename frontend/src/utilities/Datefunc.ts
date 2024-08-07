@@ -5,7 +5,7 @@ export function formatDate(date: string): string {
         year: "numeric",
         month: "short",
         day: "numeric",
-        hour: "numeric",
-        minute: "numeric"
+        // hour: "numeric",
+        // minute: "numeric"
     });
 }

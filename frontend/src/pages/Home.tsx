@@ -6,17 +6,17 @@ import Spinner from "../components/Spinner";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { Note } from "../Interfaces/Interfaces";
-import { logoutSuccess } from '../api/authSlice';
+import { logoutSuccess } from '../assets/authSlice';
 import React, { useState, useEffect } from "react";
 import { formatDate } from "../utilities/Datefunc";
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../api/userAPISlice';
-// import PushPinIcon from '@mui/icons-material/PushPin';
+import PushPinIcon from '@mui/icons-material/PushPin';
 import { Fab, IconButton, Tooltip } from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useGetNotesQuery, useDeleteNoteMutation } from '../api/notesAPISlice';
+import { useGetNotesQuery, useDeleteNoteMutation, usePinNoteMutation, useUnPinNoteMutation } from '../api/notesAPISlice';
 
 function Home() {
 
@@ -29,6 +29,8 @@ function Home() {
     const { data, isLoading, isError } = useGetNotesQuery();
     const [deleteNote] = useDeleteNoteMutation();
     const [logout] = useLogoutMutation();
+    const [pin] = usePinNoteMutation();
+    const [unPin] = useUnPinNoteMutation();
 
     const handleOpen = () => setModalOpen(true);
     const handleClose = () => { setModalOpen(false); setEditModalOpen(false); };// Closes both the add and edit modals and resets the selectedNoteId.
@@ -83,10 +85,33 @@ function Home() {
         toast.error("Sorry, an error occurred.");
     }
 
+    //Handle pin Note
+    async function handlePinNote(noteId: string) {
+        try {
+            await pin(noteId).unwrap();
+        } catch (error) {
+            console.error('Failed to pin the note:', error);
+            toast.error("Failed to Pin Note")
+        }
+    }
+
+    //Handle Un Pin Note
+    async function handleUnpinNote(noteId: string) {
+        try {
+            await unPin(noteId).unwrap();
+        } catch (error) {
+            console.error('Failed to Unpin the note:', error);
+            toast.error("Failed to Pin Note")
+        }
+    }
+
+    // Sort notes so that pinned notes come first
+    const sortedNotes = notes.slice().sort((a, b) => b.pinned - a.pinned);
+
     return (
         <div className="p-4 relative min-h-screen">
             {isLoading ? (
-                <Spinner loading={isLoading} />
+                <Spinner loading={false} />
             ) : (
                 <>
                     <div className="flex justify-between my-2 mx-6">
@@ -107,10 +132,23 @@ function Home() {
 
                     {notes.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 mb-4">
-                            {notes.map((note: Note) => (
+                            {sortedNotes.map((note: Note) => (
                                 <div key={note._id} className="p-4 rounded-md" style={{ background: '#EDEAE0' }}>
                                     <div className="flex justify-between">
                                         <h1 className="text-xl font-bold mb-2">{note.title}</h1>
+                                        {note.pinned ? (
+                                            <Tooltip title="UnPin">
+                                                <button type="button" onClick={() => handleUnpinNote(note._id as string)}>{/* Asserted the note._id Type */}
+                                                    <PushPinIcon />
+                                                </button>
+                                            </Tooltip>
+                                        ) : (
+                                            <Tooltip title="Pin">
+                                                <button type="button" onClick={() => handlePinNote(note._id as string)}>{/* Asserted the note._id Type */}
+                                                    <PushPinIcon sx={{ opacity: 0.2 }} />
+                                                </button>
+                                            </Tooltip>
+                                        )}
                                     </div>
                                     <p className="text-gray-700">{note.text}</p>
                                     <section className="text-left text-sm flex justify-between sm:text-right sm:text-base border-t-2 border-y-white space-y-2">
@@ -129,12 +167,12 @@ function Home() {
                                         <div className="timeStamp">
                                             {note.updatedAt && note.createdAt ? (
                                                 note.updatedAt > note.createdAt ? (
-                                                    `Updated At: ${formatDate(note.updatedAt)}`
+                                                    `Updated: ${formatDate(note.updatedAt)}`
                                                 ) : (
                                                     `${formatDate(note.createdAt)}`
                                                 )
                                             ) : (
-                                                `Created At: ${formatDate(note.createdAt ?? '')}`
+                                                `Created: ${formatDate(note.createdAt ?? '')}`
                                             )}
                                         </div>
                                     </section>
@@ -143,8 +181,8 @@ function Home() {
                         </div>
                     ) : (
                         <div className="min-h-screen flex items-center justify-center">
-                            <div className="text-center">
-                                No notes available
+                            <div className="text-center text-2xl font-bold">
+                                No Notes available
                             </div>
                         </div>
                     )}

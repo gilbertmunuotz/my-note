@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { isAuthenticated } from '../api/authSlice';
+import { isAuthenticated } from '../assets/authSlice';
 import { Navigate } from 'react-router-dom';
 import { ReactNode } from "react";
 
@@ -9,10 +9,10 @@ interface PrivateRouteProps {
 
 function PrivateRoute({ children }: PrivateRouteProps) {
   const isUserAuth = useSelector(isAuthenticated);
-  console.log('isUserAuth:', isUserAuth);
+  console.log('isUserAuth?:', isUserAuth);
 
   return (
-    isUserAuth ? children : <Navigate to={"/login"} />
+    isUserAuth ? children : <Navigate to={"/"} />
   )
 }
 

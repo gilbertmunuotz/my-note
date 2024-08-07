@@ -3,29 +3,6 @@ import HttpStatusCodes from '../constants/HttpStatusCodes';
 import { generateAccessToken, generateRefreshToken } from "../utilities/jwtToken";
 import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
-import { USERS_URL } from '../constants/constant';
-
-
-//(DESC) Google OAuth callback
-async function OAuth20(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const user = req.user;
-
-    try {
-        // Generate tokens
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
-
-        // Set tokens in cookies and send them in the response
-        res.cookie('accessToken', accessToken, { httpOnly: true });
-        res.cookie('refreshToken', refreshToken, { httpOnly: true });
-
-        // Redirect to the frontend home page
-        res.redirect(`${USERS_URL}/home`);
-
-    } catch (error) {
-        return next(error);
-    }
-};
 
 
 //(DESC) Passport Local User registration 
@@ -39,7 +16,7 @@ async function Registration(req: Request, res: Response, next: NextFunction) {
         let user = await UserModel.findOne({ email });
 
         if (user) {
-            return res.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'Email already exists, Login with Google or use another Email' });
+            return res.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'Email already exists!' });
         }
 
         // Hash Password Using bcryptjs
@@ -51,7 +28,7 @@ async function Registration(req: Request, res: Response, next: NextFunction) {
 
         await newUser.save();
 
-        return res.status(HttpStatusCodes.CREATED).json({ message: 'User registered successfully' });
+        return res.status(HttpStatusCodes.CREATED).json({ message: 'User Registered successfully' });
 
     } catch (error) {
         next(error);
@@ -73,7 +50,7 @@ async function Login(req: Request, res: Response, next: NextFunction) {
         res.cookie('accessToken', accessToken, { httpOnly: true });
         res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
-        return res.status(HttpStatusCodes.OK).json({ message: 'Login successful', accessToken, refreshToken });
+        return res.status(HttpStatusCodes.OK).json({ message: 'Login successful', user });
     } catch (error) {
         return next(error);
     }
@@ -101,4 +78,4 @@ async function Logout(req: Request, res: Response, next: NextFunction) {
 }
 
 
-export { OAuth20, Registration, Login, IsLogged, Logout };
+export { Registration, Login, IsLogged, Logout };

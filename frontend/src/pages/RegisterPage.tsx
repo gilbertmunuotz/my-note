@@ -1,8 +1,6 @@
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import Spinner from '../components/Spinner';
-import { GoogleOriginal } from 'devicons-react';
-import { SERVER_API } from '../config/constants';
 import { Link, useNavigate } from 'react-router-dom';
 import { Credentials } from '../Interfaces/Interfaces';
 import { useRegisterMutation } from '../api/userAPISlice';
@@ -12,7 +10,7 @@ import { Button, Modal, Box, Typography, TextField, InputAdornment, IconButton }
 function RegisterPage() {
 
     const navigate = useNavigate();
-    const [register, { isLoading, isError }] = useRegisterMutation();
+    const [register, { isLoading }] = useRegisterMutation();
 
     //Modal States
     const [open, setOpen] = useState(true);
@@ -44,21 +42,16 @@ function RegisterPage() {
             await register(credentials).unwrap();
             toast.success("Login To Continue");
             navigate("/login")
-        } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
             console.error("Error Registering", error);
-            toast.error("Error Occured, Try Later");
+            if (error?.data.message) {
+                toast.error(error?.data.message);
+            } else {
+                toast.error("An error occurred. Please try again.");
+            }
         }
     }
-
-    // Google OAuth Register
-    async function handleGoogleRegister() {
-        window.location.href = `${SERVER_API}/v1/Auth/auth/google`;
-        if (isError) {
-            console.log("Error Occured");
-            toast.error("Error occured");
-        }
-    }
-
 
     return (
         <div>
@@ -115,17 +108,8 @@ function RegisterPage() {
                             </Button>
 
                             <hr className='my-3 border-y- border-black' />
-                            <p className='text-md font-semibold ml-40 leading-loose'>Or</p>
 
-                            <Button variant="outlined" fullWidth onClick={handleGoogleRegister}
-                                sx={{ borderRadius: '50px', backgroundColor: 'white', color: 'black', fontSize: '12px', ":hover": { backgroundColor: 'aliceblue' } }}>
-                                <div className="flex gap-3">
-                                    <GoogleOriginal size="20" />
-                                    <p>Sign Up with Google.</p>
-                                </div>
-                            </Button>
-
-                            <h5 className='font-semibold ml-2 mt-2'>Dont't have an account.? Login <Link to={"/login"} className='text-sky-600'>Here</Link></h5>
+                            <h5 className='ml-2 mt-2'>Dont't have an account.? Login <Link to={"/login"} className='text-sky-600'>Here</Link></h5>
                         </Box>
                     </Modal>
                 )}
