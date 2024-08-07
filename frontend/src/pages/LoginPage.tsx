@@ -1,14 +1,12 @@
 import { toast } from "react-toastify";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from "react-redux";
 import Spinner from '../components/Spinner';
-import { GoogleOriginal } from 'devicons-react';
-import { loginSuccess } from "../api/authSlice";
-// import { SERVER_API } from '../config/constants';
+import { loginSuccess } from "../assets/authSlice";
 import { Link, useNavigate } from 'react-router-dom';
 import { UserInfo } from '../Interfaces/Interfaces';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useLoginMutation, useGoogleStratergyQuery } from '../api/userAPISlice';
+import { useLoginMutation } from '../api/userAPISlice';
 import { Button, Modal, Box, Typography, TextField, InputAdornment, IconButton } from '@mui/material';
 
 function LoginPage() {
@@ -16,8 +14,6 @@ function LoginPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [login, { isLoading }] = useLoginMutation();
-    const { data: user, error, refetch } = useGoogleStratergyQuery();
-
 
     //Modal States
     const [open, setOpen] = useState(true);
@@ -60,20 +56,6 @@ function LoginPage() {
         }
     }
 
-    // Google OAuth Login
-    async function handleGoogleLogin() {
-        refetch(); // Trigger the query to fetch the user data
-    }
-
-    useEffect(() => {
-        if (user) {
-            dispatch(loginSuccess(user));
-            toast.success("Logged in successfully!");
-        }
-        if (error) {
-            toast.error("Error logging in with Google.");
-        }
-    }, [user, error, dispatch]);
 
     return (
         <div onClick={handleOpen}>
@@ -119,18 +101,8 @@ function LoginPage() {
                         </Button>
 
                         <hr className='my-3 border-y- border-black' />
-                        <p className='text-base font-semibold ml-40 leading-8 mb-1'>Or</p>
 
-
-                        <Button variant="outlined" fullWidth onClick={handleGoogleLogin}
-                            sx={{ borderRadius: '50px', backgroundColor: 'white', color: 'black', fontSize: '14px', ":hover": { backgroundColor: 'aliceblue' } }}>
-                            <div className="flex gap-3">
-                                <GoogleOriginal size="20" />
-                                <p>Continue with Google.</p>
-                            </div>
-                        </Button>
-
-                        <h5 className='font-semibold ml-2 mt-2'>Dont't have an account.? Register <Link to={"/register"} className='text-sky-600'>Here</Link></h5>
+                        <h5 className='ml-2 mt-2'>Dont't have an account.? Register <Link to={"/register"} className='text-sky-600'>Here</Link></h5>
                     </Box>
                 </Modal>
             )}
