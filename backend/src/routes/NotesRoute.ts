@@ -20,8 +20,8 @@ router.post('/new', validateNote, createNote);
 router.get('/note/:id', getSingleNote);
 
 
-/* Update Not By Id */
-router.put('/update/:id', updateNote);
+/* Update Note By Id */
+router.put('/update/:id', validateNote, updateNote);
 
 
 /* Pin A Note By Id */
