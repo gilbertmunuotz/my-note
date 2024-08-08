@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { useDispatch } from "react-redux";
 import Spinner from '../components/Spinner';
 import { loginSuccess } from "../assets/authSlice";
-import { Link, useNavigate } from 'react-router-dom';
 import { UserInfo } from '../Interfaces/Interfaces';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../api/userAPISlice';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, Modal, Box, Typography, TextField, InputAdornment, IconButton } from '@mui/material';
 
 function LoginPage() {

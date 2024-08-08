@@ -18,7 +18,12 @@ export interface User {
   name?: string,
   email: string,
   password?: string,
-  googleId?: string,
-  displayName?: string,
   photos?: string[];
+}
+
+export interface ReqUserBody {
+  name: string,
+  email: string,
+  password: string,
+  photos: string,
 }

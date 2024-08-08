@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import passport from '../middlewares/passport-config.ts';
 import { validateLocalUser } from '../middlewares/userMiddleware';
 import { localVerify, checkAuth } from '../middlewares/authMiddleware';
-import { Registration, Login, IsLogged, Logout } from '../controllers/UserController';
+import { Registration, Login, IsLogged, Logout, UserUpdate } from '../controllers/UserController';
 
 // **** Functions **** //
 //Initiate Express Router
@@ -23,6 +22,10 @@ router.get('/isLoggedIn', checkAuth, IsLogged);
 
 /* Local LogOut route */
 router.delete('/logout', Logout);
+
+
+/* Update User By Id */
+router.put('/update/:id', validateLocalUser, UserUpdate);
 
 
 // **** Export default **** //

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../library/Store';
+import { AuthResponse } from '../Interfaces/Interfaces';
 
 const authSlice = createSlice({
     name: "authSlice",
@@ -28,6 +29,7 @@ const authSlice = createSlice({
 export const { loginSuccess, logoutSuccess } = authSlice.actions;
 
 // Selector functions to access user information
-export const isAuthenticated = (state: RootState) => state.auth.isUserAuth;
+export const isAuthenticated = (state: RootState) => state.auth.isUserAuth; // Auth State Selector
+export const user = (state: RootState): AuthResponse | null => state.auth.user; // User Info Selector
 
 export default authSlice.reducer;

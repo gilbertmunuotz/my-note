@@ -3,7 +3,7 @@ import HttpStatusCodes from '../constants/HttpStatusCodes';
 import { generateAccessToken, generateRefreshToken } from "../utilities/jwtToken";
 import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
-
+import { User, ReqUserBody } from '../constants/Interfaces';
 
 //(DESC) Passport Local User registration 
 async function Registration(req: Request, res: Response, next: NextFunction) {
@@ -77,5 +77,34 @@ async function Logout(req: Request, res: Response, next: NextFunction) {
 
 }
 
+//(DESC) Update User Information
+async function UserUpdate(req: Request, res: Response, next: NextFunction) {
 
-export { Registration, Login, IsLogged, Logout };
+    //Destructure id from req.params
+    const { id } = req.params;
+
+
+    // Destructure Request Body and explicitly type it
+    const userData: User = req.body;
+
+    //Destructure The Two value Pairs for validation
+    const { name, email, password, photos } = userData;
+
+
+    try {
+        const updateUser = await UserModel.findByIdAndUpdate<ReqUserBody>(id, userData);
+
+        if (!updateUser) {
+            return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'error', message: 'User Not Found' })
+        } else {
+            return res.status(HttpStatusCodes.OK).json({ status: 'Success', message: 'User Updated Succesfully' });
+        }
+    } catch (error) {
+        console.error('Error Updating User', error);
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send({ status: 'error', message: 'Internal Server Error' });
+        next(error);
+    }
+}
+
+
+export { Registration, Login, IsLogged, Logout, UserUpdate };
