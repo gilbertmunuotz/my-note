@@ -4,6 +4,7 @@ import { generateAccessToken, generateRefreshToken } from "../utilities/jwtToken
 import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
 import { User, ReqUserBody } from '../constants/Interfaces';
+import { cloudinary } from '../utilities/cloudinary';
 
 //(DESC) Passport Local User registration 
 async function Registration(req: Request, res: Response, next: NextFunction) {
@@ -88,16 +89,44 @@ async function UserUpdate(req: Request, res: Response, next: NextFunction) {
     const userData: User = req.body;
 
     //Destructure The Two value Pairs for validation
-    const { name, email, password, photos } = userData;
-
+    const { name, email, password, photo } = userData;
 
     try {
-        const updateUser = await UserModel.findByIdAndUpdate<ReqUserBody>(id, userData);
 
-        if (!updateUser) {
-            return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'error', message: 'User Not Found' })
-        } else {
-            return res.status(HttpStatusCodes.OK).json({ status: 'Success', message: 'User Updated Succesfully' });
+        // Check if the user exists by ID
+        const existingUser = await UserModel.findById(id);
+        if (!existingUser) {
+            return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'error', message: 'User Not Found' });
+        }
+
+
+        // Initialize update object with current user data
+        let updateData: string = {
+            name: name || existingUser.name,
+            email: email || existingUser.email
+        }
+
+        // Check if a new password is provided and hash it
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            updateData.password = hashedPassword;
+        }
+        // Check if Image Exists
+        if (photo) {
+            const profilePhoto = await cloudinary.uploader.upload(photo, {
+                upload_preset: "my-notecloud"
+            })
+
+            if (profilePhoto) {
+                const updateUser = await UserModel.findByIdAndUpdate<ReqUserBody>(id, { name, email, password, photo: profilePhoto });
+
+                if (!updateUser) {
+                    return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'error', message: 'User Not Found' })
+                } else {
+                    return res.status(HttpStatusCodes.OK).json({ status: 'Success', message: 'User Updated Succesfully' });
+                }
+            }
         }
     } catch (error) {
         console.error('Error Updating User', error);
