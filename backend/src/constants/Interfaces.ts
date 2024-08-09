@@ -18,12 +18,12 @@ export interface User {
   name?: string,
   email: string,
   password?: string,
-  photos?: string[];
+  photo?: string;
 }
 
 export interface ReqUserBody {
   name: string,
   email: string,
   password: string,
-  photos: string,
+  photo: string,
 }
