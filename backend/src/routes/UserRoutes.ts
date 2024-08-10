@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { validateLocalUser } from '../middlewares/userMiddleware';
+import upload from '../utilities/multerConfig';
+import { validateLocalUser } from '../middlewares/UserMiddleware';
 import { localVerify, checkAuth } from '../middlewares/authMiddleware';
 import { Registration, Login, IsLogged, Logout, UserUpdate } from '../controllers/UserController';
 
@@ -25,8 +26,7 @@ router.delete('/logout', Logout);
 
 
 /* Update User By Id */
-router.put('/update/:id', validateLocalUser, UserUpdate);
-
+router.put('/update/:id', upload.single('photo'), validateLocalUser, UserUpdate);
 
 // **** Export default **** //
 export default router;

@@ -3,7 +3,7 @@ import HttpStatusCodes from '../constants/HttpStatusCodes';
 import { generateAccessToken, generateRefreshToken } from "../utilities/jwtToken";
 import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
-import { User, ReqUserBody } from '../constants/Interfaces';
+import { User } from '../constants/Interfaces';
 import { cloudinary } from '../utilities/cloudinary';
 
 //(DESC) Passport Local User registration 
@@ -86,13 +86,10 @@ async function UserUpdate(req: Request, res: Response, next: NextFunction) {
 
 
     // Destructure Request Body and explicitly type it
-    const userData: User = req.body;
-
-    //Destructure The Two value Pairs for validation
-    const { name, email, password, photo } = userData;
+    const { name, email, password } = req.body;
+    const photo = req.file; // Access uploaded file from multer
 
     try {
-
         // Check if the user exists by ID
         const existingUser = await UserModel.findById(id);
         if (!existingUser) {
@@ -101,10 +98,10 @@ async function UserUpdate(req: Request, res: Response, next: NextFunction) {
 
 
         // Initialize update object with current user data
-        let updateData: string = {
+        let updateData: Partial<User> = {
             name: name || existingUser.name,
-            email: email || existingUser.email
-        }
+            email: email || existingUser.email,
+        };
 
         // Check if a new password is provided and hash it
         if (password) {
@@ -112,24 +109,34 @@ async function UserUpdate(req: Request, res: Response, next: NextFunction) {
             const hashedPassword = await bcrypt.hash(password, salt);
             updateData.password = hashedPassword;
         }
-        // Check if Image Exists
-        if (photo) {
-            const profilePhoto = await cloudinary.uploader.upload(photo, {
-                upload_preset: "my-notecloud"
-            })
 
-            if (profilePhoto) {
-                const updateUser = await UserModel.findByIdAndUpdate<ReqUserBody>(id, { name, email, password, photo: profilePhoto });
 
-                if (!updateUser) {
-                    return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'error', message: 'User Not Found' })
-                } else {
-                    return res.status(HttpStatusCodes.OK).json({ status: 'Success', message: 'User Updated Succesfully' });
-                }
+        // Upload photo if provided and it's an image
+        if (req.file && req.file.buffer) {
+            const uploadedPhoto = await cloudinary.uploader.upload(`data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`, {
+                upload_preset: 'my-notecloud',
+            });
+            if (uploadedPhoto) {
+                // Assign the secure URL to the photo field if Present
+                updateData.photo = uploadedPhoto.secure_url;
             }
+        } else {
+            // Retain the existing photo if no new photo is provided
+            updateData.photo = existingUser.photo;
         }
-    } catch (error) {
-        console.error('Error Updating User', error);
+
+
+        // Update the user with the new data
+        const updateUser = await UserModel.findByIdAndUpdate(id, updateData, { new: true });
+
+        if (!updateUser) {
+            return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'error', message: 'User Not Found' });
+        }
+
+        return res.status(HttpStatusCodes.OK).json({ status: 'Success', message: 'User Updated Successfully', data: updateUser });
+    }
+    catch (error) {
+        console.error('Error Updating User:', error);
         res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send({ status: 'error', message: 'Internal Server Error' });
         next(error);
     }

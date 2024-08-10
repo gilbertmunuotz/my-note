@@ -50,7 +50,7 @@ interface AuthResponse {
         name: string;
         email: string;
         password: string;
-        photos: string[];
+        photos: string;
         createdAt: string;
         updatedAt: string;
         __v: number;
