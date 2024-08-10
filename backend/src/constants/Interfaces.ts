@@ -20,10 +20,3 @@ export interface User {
   password?: string,
   photo?: string;
 }
-
-export interface ReqUserBody {
-  name: string,
-  email: string,
-  password: string,
-  photo: string,
-}
