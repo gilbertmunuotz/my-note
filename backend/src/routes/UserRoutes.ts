@@ -2,7 +2,7 @@ import { Router } from 'express';
 import upload from '../utilities/multerConfig';
 import { validateLocalUser } from '../middlewares/UserMiddleware';
 import { localVerify, checkAuth } from '../middlewares/authMiddleware';
-import { Registration, Login, IsLogged, Logout, UserUpdate } from '../controllers/UserController';
+import { Registration, Login, IsLogged, Logout, GetUser, UserUpdate } from '../controllers/UserController';
 
 // **** Functions **** //
 //Initiate Express Router
@@ -25,8 +25,13 @@ router.get('/isLoggedIn', checkAuth, IsLogged);
 router.delete('/logout', Logout);
 
 
+/* Get User By Id */
+router.get('/user/:id', GetUser);
+
+
 /* Update User By Id */
 router.put('/update/:id', upload.single('photo'), validateLocalUser, UserUpdate);
+
 
 // **** Export default **** //
 export default router;

@@ -29,7 +29,7 @@ function EditNote({ open, onClose, noteId }: EditNoteProps) {
         try {
             await updateNote({ _id: noteId, title, text }).unwrap();
             toast.success("Note updated successfully!");
-            onClose();
+            onClose();        
         } catch (error) {
             console.error("Error Updating Note", error);
             toast.error("Error Occured, Try Again");

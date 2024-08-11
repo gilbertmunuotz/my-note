@@ -38,8 +38,8 @@ export const notesAPISlice = createApi({
             providesTags: ['Notes']
         }),
         updateNote: builder.mutation<void, Note>({
-            query: (note) => ({
-                url: `/update/${note._id}`,
+            query: ({ _id, ...note }) => ({
+                url: `/update/${_id}`,
                 method: 'PUT',
                 body: note,
             }),
@@ -71,4 +71,5 @@ export const notesAPISlice = createApi({
 
 export const { useGetNotesQuery, useAddNewNoteMutation,
     useGetNoteIdQuery, useUpdateNoteMutation,
-    useDeleteNoteMutation, usePinNoteMutation, useUnPinNoteMutation } = notesAPISlice;
+    useDeleteNoteMutation, usePinNoteMutation,
+    useUnPinNoteMutation } = notesAPISlice;

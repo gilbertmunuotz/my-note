@@ -58,5 +58,12 @@ interface AuthResponse {
 }
 
 
+interface ProfileInfo {
+    _id?: string,
+    name?: string,
+    email?: string,
+    password?: string,
+    photo?: string;
+}
 
-export type { Note, FetchedNotes, SpinnerProps, AddNotes, EditNoteProps, Credentials, UserInfo, AuthResponse };
+export type { Note, FetchedNotes, SpinnerProps, AddNotes, EditNoteProps, Credentials, UserInfo, AuthResponse, ProfileInfo };

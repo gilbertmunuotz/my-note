@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { SERVER_API } from "../config/constants";
-import { Credentials, UserInfo } from '../Interfaces/Interfaces';
+import { Credentials, UserInfo, ProfileInfo } from '../Interfaces/Interfaces';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: `${SERVER_API}/v1/Auth`,
@@ -36,8 +36,27 @@ export const userAPISlice = createApi({
                 method: 'DELETE'
             }),
         }),
+        // Get User By id
+        getUser: builder.query<ProfileInfo, string>({
+            query: (_id) => ({
+                url: `/user/${_id}`,
+                method: 'GET'
+            }),
+            providesTags: ['User']
+        }),
+        // Update User Info
+        updateUser: builder.mutation<void, { _id: string, formData: FormData }>({
+            query: ({ _id, formData }) => ({
+                url: `/update/${_id}`,
+                method: 'PUT',
+                body: formData,
+            }),
+            invalidatesTags: ['User']
+        }),
     })
 })
 
 
-export const { useRegisterMutation, useLoginMutation, useLogoutMutation } = userAPISlice;
+export const { useRegisterMutation, useLoginMutation,
+    useLogoutMutation, useGetUserQuery,
+    useUpdateUserMutation } = userAPISlice;

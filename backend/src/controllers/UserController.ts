@@ -78,6 +78,25 @@ async function Logout(req: Request, res: Response, next: NextFunction) {
 
 }
 
+
+//(DESC) Update User Information By Id
+async function GetUser(req: Request, res: Response, next: NextFunction) {
+
+    // Desrtucture Req.body
+    const { id } = req.params;
+
+
+    //Find User by id
+    const user = await UserModel.findById(id);
+
+    if (!user) {
+        res.status(HttpStatusCodes.NOT_FOUND).send({ status: 'error', message: 'User Not Found' });
+    } else {
+        return res.status(HttpStatusCodes.OK).json(user);
+    }
+}
+
+
 //(DESC) Update User Information
 async function UserUpdate(req: Request, res: Response, next: NextFunction) {
 
@@ -143,4 +162,4 @@ async function UserUpdate(req: Request, res: Response, next: NextFunction) {
 }
 
 
-export { Registration, Login, IsLogged, Logout, UserUpdate };
+export { Registration, Login, IsLogged, Logout, GetUser, UserUpdate };
