@@ -60,7 +60,6 @@ async function updateNote(req: Request, res: Response, next: NextFunction) {
     // Destructure Request Body and explicitly type it
     const noteData: ReqNoteBody = req.body;
 
-
     //Destructure The Two value Pairs for validation
     const { title, text } = noteData;
 
