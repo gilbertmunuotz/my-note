@@ -10,7 +10,7 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import SwipeLeftAltIcon from '@mui/icons-material/SwipeLeftAlt';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useGetUserQuery, useUpdateUserMutation } from '../api/userAPISlice';
-import { Box, IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
+import { IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
 
 function ProfilePage() {
 
