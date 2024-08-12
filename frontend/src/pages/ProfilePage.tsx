@@ -10,7 +10,7 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import SwipeLeftAltIcon from '@mui/icons-material/SwipeLeftAlt';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useGetUserQuery, useUpdateUserMutation } from '../api/userAPISlice';
-import { IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
+import { Box, IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
 
 function ProfilePage() {
 
@@ -110,7 +110,7 @@ function ProfilePage() {
             <div className="flex justify-between">
               <div className="">
                 {imageLoaded ? (
-                  <img src={previewImage} alt="Tap Camera Icon to Upload Photo" className='rounded-full' style={{ width: '250px', height: '250px', objectFit: 'cover' }} />
+                  <img src={previewImage} alt="Tap Camera Icon to Upload Photo" className='rounded-full' style={{ width: '250px', height: '250px', objectFit: 'cover', lineHeight: 10 }} />
                 ) : (
                   <Skeleton variant="circular" animation="wave" height={250} width={250} />
                 )}
@@ -141,7 +141,6 @@ function ProfilePage() {
               <div className="my-3">
                 <label htmlFor="name" className="block text-lg font-semibold text-gray-900">Username</label>
                 <input
-                  required
                   type="text"
                   id="name"
                   onChange={(event) => setName(event.target.value)}
@@ -153,7 +152,6 @@ function ProfilePage() {
               <div className="my-3">
                 <label htmlFor="email" className="block text-lg font-semibold text-gray-900">Email</label>
                 <input
-                  required
                   type="email"
                   id="email"
                   onChange={(event) => setEmail(event.target.value)}
@@ -165,7 +163,6 @@ function ProfilePage() {
               <div className="my-3">
                 <label htmlFor="password" className="block text-lg font-semibold text-gray-900">Password</label>
                 <TextField
-                  required
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   InputProps={{
