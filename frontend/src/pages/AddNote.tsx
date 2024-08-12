@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useAddNewNoteMutation } from "../api/notesAPISlice";
+import { user } from '../assets/authSlice';
+import { useSelector } from 'react-redux';
+import { AuthResponse } from '../Interfaces/Interfaces';
 import { AddNotes, Note } from "../Interfaces/Interfaces";
+import { useAddNewNoteMutation } from "../api/notesAPISlice";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 
 function AddNote({ open, onClose }: AddNotes) {
+
+    //  State Hooks
+    const userInfo = useSelector(user) as AuthResponse;   // Extract user information
+    const Id = userInfo?.user?._id;   // Extract user ID from user Slice
+    const userId = Id; // Assign Id to userId
 
     const [addNewNote, { isLoading, isError }] = useAddNewNoteMutation();
     const [text, setText] = useState<string>('');
@@ -15,7 +23,7 @@ function AddNote({ open, onClose }: AddNotes) {
 
         event.preventDefault();
 
-        const newNote: Note = { title, text };
+        const newNote: Note = { title, text, user: userId };
 
         try {
             await addNewNote(newNote).unwrap();

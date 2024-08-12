@@ -9,7 +9,7 @@ const router = Router();
 
 
 /* GET All Notes */
-router.get('/all', getAllNotes);
+router.get('/all/:id', getAllNotes);
 
 
 /* POST New Note */

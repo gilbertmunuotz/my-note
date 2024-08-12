@@ -15,9 +15,9 @@ export const notesAPISlice = createApi({
         // First paramater Represents the Expected Return Data Type
         // Second parameter Represents the Passed Data Type
 
-        getNotes: builder.query<FetchedNotes, void>({
-            query: () => ({
-                url: `/all`,
+        getNotes: builder.query<FetchedNotes, string>({
+            query: (_id) => ({
+                url: `/all/${_id}`,
                 method: 'GET'
             }),
             providesTags: ['Notes'],

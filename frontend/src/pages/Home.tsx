@@ -2,13 +2,16 @@ import NewNote from './AddNote';
 import EditNote from './EditNote';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { user } from '../assets/authSlice';
 import Spinner from "../components/Spinner";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { Note } from "../Interfaces/Interfaces";
-import { logoutSuccess } from '../assets/authSlice';
 import React, { useState, useEffect } from "react";
+import { logoutSuccess } from '../assets/authSlice';
 import { formatDate } from "../utilities/Datefunc";
+import { AuthResponse } from '../Interfaces/Interfaces';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,13 +23,19 @@ import { useGetNotesQuery, useDeleteNoteMutation, usePinNoteMutation, useUnPinNo
 
 function Home() {
 
+    //  State Hooks
+    const userInfo = useSelector(user) as AuthResponse;   // Extract user information
+    const Id = userInfo?.user?._id;   // Extract user ID from user Slice
+    const userId = Id; // Assign Id to userId
+
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [modalOpen, setModalOpen] = useState(false); // Manage Add Modal
     const [editModalOpen, setEditModalOpen] = useState(false); // Manages the open/close state of the edit modal.
     const [selectedNoteId, setSelectedNoteId] = useState<string>(''); // Stores the ID of the note being edited
     const [notes, setNotes] = useState<Note[]>([]);
-    const { data, isLoading, isError } = useGetNotesQuery();
+    const { data, isLoading, isError } = useGetNotesQuery(userId); // Pass Id to the Hook to Get All Notes
     const [deleteNote] = useDeleteNoteMutation();
     const [logout] = useLogoutMutation();
     const [pin] = usePinNoteMutation();
