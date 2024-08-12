@@ -2,15 +2,21 @@ import { Request, Response, NextFunction } from "express";
 import NoteModel from "../models/Note";
 import { NoteBody, ReqNoteBody } from "../constants/Interfaces";
 import HttpStatusCodes from "../constants/HttpStatusCodes";
+import mongoose from "mongoose";
 
 //(DESC) Create New Note
 async function createNote(req: Request, res: Response, next: NextFunction) {
 
     // Destructure Request Body and explicitly type it
-    const { title, text }: NoteBody = req.body;
+    const { title, text, user }: NoteBody = req.body;
 
     try {
-        const newNote = await NoteModel.create<NoteBody>({ title, text })
+        // Validate user ID (you might want to add more checks here)
+        if (!mongoose.Types.ObjectId.isValid(user)) {
+            return res.status(HttpStatusCodes.BAD_REQUEST).send({ status: 'error', message: 'Invalid user ID' });
+        }
+
+        const newNote = await NoteModel.create({ title, text, user })
         return res.status(HttpStatusCodes.CREATED).send({ status: 'Success', message: 'Note Created Succesfully' });
 
     } catch (error) {
@@ -23,8 +29,17 @@ async function createNote(req: Request, res: Response, next: NextFunction) {
 
 //(DESC) Get All Notes
 async function getAllNotes(req: Request, res: Response, next: NextFunction) {
+
+    // Extract user ID from request
+    const userId = req.params.id as string;
+
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(HttpStatusCodes.BAD_REQUEST).send({ status: 'error', message: 'Invalid or missing user ID' });
+    }
+
     try {
-        const notes = await NoteModel.find({})
+        // Fetch notes for the specific user
+        const notes = await NoteModel.find({ user: userId });
         res.status(HttpStatusCodes.OK).json({ Quantity: notes.length, Notes: notes })
     } catch (error) {
         console.error('Error Getting Data', error);

@@ -7,6 +7,7 @@ const validateNote = (req: Request, res: Response, next: NextFunction) => {
     const noteSchema = Joi.object().keys({
         title: Joi.string().required(),
         text: Joi.string().required(),
+        user: Joi.string().optional(),
     }).options({ abortEarly: false });
 
     const { error } = noteSchema.validate(req.body, { abortEarly: false });
