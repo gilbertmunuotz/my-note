@@ -14,6 +14,8 @@ import { IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
 
 function ProfilePage() {
 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+
   // State to track if the image is loaded
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +41,9 @@ function ProfilePage() {
   const [password, setPassword] = useState<string>('');
   const [photo, setPhoto] = useState<File | null>(null);
 
+  //Image Error State
+  const [error, setError] = useState<string | null>(null);
+
   // Simulate loading state
   useEffect(() => {
     // Simulate image loading
@@ -60,9 +65,18 @@ function ProfilePage() {
 
   // Handle file input change and set preview image
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
+    const file = event.target.files ? event.target.files[0] : null
+    if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        setError('File size exceeds the 10MB limit.');
+        setPhoto(null);
+        setPreviewImage(null);
+        return;
+      }
+
       setPhoto(file);
+      // Clear any previous error
+      setError(null);
 
       // Create a preview URL for the image
       const fileURL = URL.createObjectURL(file);
@@ -114,6 +128,7 @@ function ProfilePage() {
                 ) : (
                   <Skeleton variant="circular" animation="wave" height={250} width={250} />
                 )}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
               </div>
               <div className="">
                 <Tooltip title="Edit Picture">
@@ -152,6 +167,7 @@ function ProfilePage() {
               <div className="my-3">
                 <label htmlFor="email" className="block text-lg font-semibold text-gray-900">Email</label>
                 <input
+                  required
                   type="email"
                   id="email"
                   onChange={(event) => setEmail(event.target.value)}
