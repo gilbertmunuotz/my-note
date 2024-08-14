@@ -5,6 +5,9 @@ import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
 import { User } from '../constants/Interfaces';
 import { cloudinary } from '../utilities/cloudinary';
+import { sendMail } from '../utilities/NodeMailer';
+import crypto from 'crypto';
+
 
 //(DESC) Passport Local User registration 
 async function Registration(req: Request, res: Response, next: NextFunction) {
@@ -162,4 +165,60 @@ async function UserUpdate(req: Request, res: Response, next: NextFunction) {
 }
 
 
-export { Registration, Login, IsLogged, Logout, GetUser, UserUpdate };
+//(DESC) Check E-mail &Send OTP 
+async function GenerateOTP(req: Request, res: Response, next: NextFunction) {
+
+    // Destructure Req.body
+    const { email } = req.body;
+
+    try {
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'Error', Message: 'No user found with Such email.' });
+        }
+
+        // Generate a 6-digit OTP
+        const otp = crypto.randomInt(100000, 999999);
+
+        user.resetOtp = otp;
+        // 10 minutes expiry
+        user.otpExpires = Date.now() + 10 * 60 * 1000;
+
+        await user.save();
+
+        // Send OTP email
+        await sendMail(email, otp);
+
+        res.status(HttpStatusCodes.OK).json({ status: 'Success', Message: 'OTP Sent to Your Email' });
+    } catch (error) {
+        console.error('Error in ResetPassword:', error);
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'Error', Message: 'Failed to process password reset.' });
+
+    }
+}
+
+
+//(DESC) Verify OTP & Reset Password
+async function VerifyOTP(req: Request, res: Response, next: NextFunction) {
+
+    // Destrucure req.body
+    const { email, otp } = req.body;
+
+    try {
+        const user = await UserModel.findOne({ email });
+
+        if (!user || user.resetOtp !== otp || (user.otpExpires && user.otpExpires < Date.now())) {
+            return res.status(HttpStatusCodes.BAD_REQUEST).json({ status: 'Error', Message: 'Invalid or expired OTP.' });
+        }
+        // OTP is valid and not expired
+        else {
+            return res.status(HttpStatusCodes.OK).json({ status: 'Success', Message: "OTP is Valid", user })
+        }
+    } catch (error) {
+        console.error('Error in VerifyOTP:', error);
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'Error', Message: 'Failed to verify OTP.' });
+    }
+}
+
+export { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP };

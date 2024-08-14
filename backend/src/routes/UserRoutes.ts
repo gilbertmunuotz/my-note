@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import upload from '../utilities/multerConfig';
+import validateOTP from '../middlewares/OTPMiddleware';
 import { validateLocalUser } from '../middlewares/UserMiddleware';
 import { localVerify, checkAuth } from '../middlewares/authMiddleware';
-import { Registration, Login, IsLogged, Logout, GetUser, UserUpdate } from '../controllers/UserController';
+import { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP } from '../controllers/UserController';
 
 // **** Functions **** //
 //Initiate Express Router
@@ -31,6 +32,14 @@ router.get('/user/:id', GetUser);
 
 /* Update User By Id */
 router.put('/update/:id', upload.single('photo'), validateLocalUser, UserUpdate);
+
+
+/* Generate OTP */
+router.post('/user/Get-OTP', GenerateOTP);
+
+
+/* Verify OTP */
+router.post('/verify/otp', validateOTP, VerifyOTP);
 
 
 // **** Export default **** //
