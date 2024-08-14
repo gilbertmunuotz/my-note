@@ -8,6 +8,8 @@ const userSchema = new Schema<User>({
     email: { type: String, unique: true },
     password: { type: String },
     photo: { type: String },
+    resetOtp: { type: Number },
+    otpExpires: { type: Number },
 }, { timestamps: true });
 
 
