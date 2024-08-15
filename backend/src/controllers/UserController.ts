@@ -193,7 +193,7 @@ async function GenerateOTP(req: Request, res: Response, next: NextFunction) {
         res.status(HttpStatusCodes.OK).json({ status: 'Success', Message: 'OTP Sent to Your Email' });
     } catch (error) {
         console.error('Error in ResetPassword:', error);
-        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'Error', Message: 'Failed to process password reset.' });
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'Error', Message: 'Failed to process password reset OTP.' });
 
     }
 }
@@ -202,8 +202,8 @@ async function GenerateOTP(req: Request, res: Response, next: NextFunction) {
 //(DESC) Verify OTP & Reset Password
 async function VerifyOTP(req: Request, res: Response, next: NextFunction) {
 
-    // Destrucure req.body
-    const { email, otp } = req.body;
+    // Destructure req.body
+    const { email, otp, newpassword } = req.body;
 
     try {
         const user = await UserModel.findOne({ email });
@@ -213,11 +213,27 @@ async function VerifyOTP(req: Request, res: Response, next: NextFunction) {
         }
         // OTP is valid and not expired
         else {
-            return res.status(HttpStatusCodes.OK).json({ status: 'Success', Message: "OTP is Valid", user })
+
+            try {
+                // Hash the new password
+                const hashedPassword = await bcrypt.hash(newpassword, 10);
+
+                // Update the user document
+                user.password = hashedPassword,
+                    user.resetOtp = undefined,
+                    user.otpExpires = undefined,
+
+                    //Save new Credentials
+                    await user.save();
+                return res.status(HttpStatusCodes.OK).json({ status: 'Success', Message: "Password reset successful", user })
+
+            } catch (error) {
+                console.error('Error Updating Password', error);
+                return res.status(HttpStatusCodes.BAD_REQUEST).json({ status: 'Error', Message: 'Error Updating Password' })
+            }
         }
     } catch (error) {
-        console.error('Error in VerifyOTP:', error);
-        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'Error', Message: 'Failed to verify OTP.' });
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'Error', Message: 'Internal Server Error.' });
     }
 }
 
