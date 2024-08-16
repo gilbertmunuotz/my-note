@@ -53,10 +53,17 @@ export const userAPISlice = createApi({
             }),
             invalidatesTags: ['User']
         }),
+        getOTP: builder.mutation<void, string>({
+            query: (email) => ({
+                url: `/user/Get-OTP`,
+                method: 'POST',
+                body: {email},
+            })
+        }),
     })
 })
 
 
 export const { useRegisterMutation, useLoginMutation,
     useLogoutMutation, useGetUserQuery,
-    useUpdateUserMutation } = userAPISlice;
+    useUpdateUserMutation, useGetOTPMutation } = userAPISlice;

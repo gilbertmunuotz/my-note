@@ -7,6 +7,7 @@ import NotFound from './components/NotFound';
 import Landingpage from './pages/LandingPage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
+import ForgotPassword from './pages/ForgotPassword';
 import PrivateRoute from './components/PrivateRoute';
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
@@ -18,7 +19,8 @@ function App() {
     { path: '/note/:id', element: (<PrivateRoute><Edit /></PrivateRoute>), errorElement: <NotFound /> },
     { path: '/me/profile', element: (<PrivateRoute><Profile /></PrivateRoute>), errorElement: <NotFound /> },
     { path: '/login', element: <Login />, errorElement: <NotFound /> },
-    { path: '/register', element: <Register />, errorElement: <NotFound /> }
+    { path: '/register', element: <Register />, errorElement: <NotFound /> },
+    { path: '/forgot-password', element: <ForgotPassword />, errorElement: <NotFound /> },
   ]);
 
   return (

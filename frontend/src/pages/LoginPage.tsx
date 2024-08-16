@@ -102,7 +102,10 @@ function LoginPage() {
 
                         <hr className='my-3 border-y- border-black' />
 
-                        <h5 className='ml-2 mt-2'>Dont't have an account.? Register <Link to={"/register"} className='text-sky-600'>Here</Link></h5>
+
+                        <h5 className='ml-2 mt-2'>Don't have an account?<Link to={"/register"} className='text-sky-600'> Register</Link></h5>
+                        <h6 className="ml-2"><Link to={"/forgot-password"} className='text-sky-600'> forgot Password</Link></h6>
+
                     </Box>
                 </Modal>
             )}

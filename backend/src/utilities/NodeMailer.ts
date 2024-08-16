@@ -37,7 +37,7 @@ async function sendMail(email: string, otp: number) {
         </p>
 
         <p2>Please enter the following code for verification</p2>
-        <p style="font-size:2em"> ${otp}. </p>
+        <p style="font-size:2em"> ${otp} </p>
         <p3>It expires in 10 minutes.</p3>
 
         <p>If you did not request this change, please Ignore this Mail</p3>
