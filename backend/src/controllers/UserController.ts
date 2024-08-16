@@ -5,7 +5,7 @@ import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
 import { User } from '../constants/Interfaces';
 import { cloudinary } from '../utilities/cloudinary';
-import { sendMail } from '../utilities/NodeMailer';
+import { sendMail } from '../utilities/nodeMailer';
 import crypto from 'crypto';
 
 
@@ -175,7 +175,7 @@ async function GenerateOTP(req: Request, res: Response, next: NextFunction) {
         const user = await UserModel.findOne({ email });
 
         if (!user) {
-            return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'Error', Message: 'No user found with Such email.' });
+            return res.status(HttpStatusCodes.NOT_FOUND).json({ status: 'Error', message: 'No user found with Such Email.' });
         }
 
         // Generate a 6-digit OTP
