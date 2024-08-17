@@ -199,11 +199,11 @@ async function GenerateOTP(req: Request, res: Response, next: NextFunction) {
 }
 
 
-//(DESC) Verify OTP & Reset Password
+//(DESC) Verify OTP
 async function VerifyOTP(req: Request, res: Response, next: NextFunction) {
 
     // Destructure req.body
-    const { email, otp, newpassword } = req.body;
+    const { email, otp } = req.body;
 
     try {
         const user = await UserModel.findOne({ email });
@@ -211,30 +211,54 @@ async function VerifyOTP(req: Request, res: Response, next: NextFunction) {
         if (!user || user.resetOtp !== otp || (user.otpExpires && user.otpExpires < Date.now())) {
             return res.status(HttpStatusCodes.BAD_REQUEST).json({ status: 'Error', Message: 'Invalid or expired OTP.' });
         }
-        // OTP is valid and not expired
-        else {
 
-            try {
-                // Hash the new password
-                const hashedPassword = await bcrypt.hash(newpassword, 10);
+        //if OTP is valid 
+        return res.status(HttpStatusCodes.OK).json({ status: 'Success', Message: "OTP verified successfully" })
 
-                // Update the user document
-                user.password = hashedPassword,
-                    user.resetOtp = undefined,
-                    user.otpExpires = undefined,
-
-                    //Save new Credentials
-                    await user.save();
-                return res.status(HttpStatusCodes.OK).json({ status: 'Success', Message: "Password reset successful", user })
-
-            } catch (error) {
-                console.error('Error Updating Password', error);
-                return res.status(HttpStatusCodes.BAD_REQUEST).json({ status: 'Error', Message: 'Error Updating Password' })
-            }
-        }
-    } catch (error) {
+    }
+    catch (error) {
         res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'Error', Message: 'Internal Server Error.' });
     }
 }
 
-export { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP };
+
+//(DESC) Change Password
+async function ChangePassword(req: Request, res: Response, next: NextFunction) {
+
+    // Destructure req.body
+    const { email, newpassword } = req.body;
+
+    try {
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return res.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'User not found.' });
+        }
+
+        // Generate Salts
+        const salt = await bcrypt.genSalt(10);
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newpassword, salt);
+
+        // Update the user document
+        user.password = hashedPassword;
+
+        // Clear OTP in DB
+        user.resetOtp = undefined;
+        user.otpExpires = undefined;
+
+        // Save User
+        await user.save();
+
+        return res.status(HttpStatusCodes.OK).json({ status: 'Success', Message: 'Password Changed successful.' });
+
+    } catch (error) {
+        console.error("Error Changing Password", error);
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send({ status: 'error', message: 'Internal Server Error' });
+        next(error);
+    }
+}
+
+
+export { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP, ChangePassword };

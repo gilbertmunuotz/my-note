@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
 import HttpStatusCodes from "../constants/HttpStatusCodes";
 
-const validateOTP = (req: Request, res: Response, next: NextFunction) => {
+const newPassword = (req: Request, res: Response, next: NextFunction) => {
     //Perform Joi Validation
     const noteSchema = Joi.object().keys({
         email: Joi.string().required(),
-        otp: Joi.number().required(),
+        newpassword: Joi.string().required(),
     }).options({ abortEarly: false });
 
     const { error } = noteSchema.validate(req.body, { abortEarly: false });
@@ -20,4 +20,4 @@ const validateOTP = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //Export Default Constant
-export default validateOTP;
+export default newPassword;

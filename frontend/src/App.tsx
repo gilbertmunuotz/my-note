@@ -1,9 +1,11 @@
+import OTP from './pages/OTP';
 import Home from "./pages/Home";
 import Edit from "./pages/EditNote";
 import Login from './pages/LoginPage';
 import Profile from './pages/ProfilePage';
 import Register from './pages/RegisterPage';
 import NotFound from './components/NotFound';
+import NewPassword from './pages/NewPassword';
 import Landingpage from './pages/LandingPage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
@@ -21,6 +23,8 @@ function App() {
     { path: '/login', element: <Login />, errorElement: <NotFound /> },
     { path: '/register', element: <Register />, errorElement: <NotFound /> },
     { path: '/forgot-password', element: <ForgotPassword />, errorElement: <NotFound /> },
+    { path: '/otp-verify', element: <OTP />, errorElement: <NotFound /> },
+    { path: '/new-password', element: <NewPassword />, errorElement: <NotFound /> },
   ]);
 
   return (

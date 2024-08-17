@@ -17,7 +17,7 @@ async function sendMail(email: string, otp: number) {
     });
 
     const mailOptions = {
-        from: 'My Note',
+        from: `My Note`,
         to: email,
         subject: 'One-time Verification Code',
         html: `<!DOCTYPE html>
