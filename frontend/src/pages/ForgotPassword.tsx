@@ -1,13 +1,23 @@
-import mynote from '/mynote.png';
+import mynote from '/mail.jpg';
 import { toast } from 'react-toastify';
 import React, { useState } from "react";
 import Spinner from '../components/Spinner';
+import { useNavigate } from 'react-router-dom';
+import MailIcon from '@mui/icons-material/Mail';
 import { useGetOTPMutation } from '../api/userAPISlice';
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Modal, InputAdornment, TextField, Typography } from "@mui/material";
 
 function ForgotPassword() {
-    const [email, setEmail] = useState('');
+    const navigate = useNavigate();
     const [getOTP, { isLoading }] = useGetOTPMutation();
+
+    // Form Email State
+    const [email, setEmail] = useState('');
+
+    // Modal States
+    const [open, setOpen] = useState(true);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     // Generate OTP
     async function handleGetOTP(event: React.FormEvent<HTMLFormElement>) {
@@ -21,7 +31,9 @@ function ForgotPassword() {
 
         try {
             await getOTP(email).unwrap();
-            toast.success("OTP Generated Succesfully");
+            toast.success("OTP Sent Successfully!");
+            setEmail('');
+            navigate(`/otp-verify?email=${encodeURIComponent(email)}`);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.error("Error Generating OTP", error);
@@ -34,28 +46,22 @@ function ForgotPassword() {
     }
 
     return (
-        <div>
-            {isLoading ? (
-                <Spinner loading={isLoading} /> // Ensure Spinner component accepts 'loading' prop
-            ) : (
-                <div className="flex flex-col items-center sm:flex-row sm:justify-center p-3">
-                    <div className="w-full sm:w-1/5 p-4 flex justify-center">
-                        <div className="w-full h-full max-w-xs">
+        <div onClick={handleOpen}>
+            <div className="flex items-center justify-center min-h-screen bg-gray-50">
+                {isLoading ? (
+                    <Spinner loading={isLoading} />
+                ) : (
+                    <Modal open={open} onClose={handleClose} aria-labelledby="forgot-password-modal-title">
+                        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '1px solid #000', p: 4 }}>
                             <img
                                 src={mynote}
-                                alt="Reset Password Image"
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            />
-                        </div>
-                    </div>
-                    <div className="w-full sm:w-3/4 p-4 flex justify-center">
-                        <form onSubmit={handleGetOTP}>
-                            <Box sx={{ padding: '2em' }}>
-                                <h1 className="text-xl mb-4">Verify Your Identity</h1>
-                                <p className="text-3xl font-semibold text-blue-500 mb-14 font-serif">My Note</p>
-                                <p className="font-serif text-xl">
-                                    We Need to Verify your identity Before Password Resetting.
-                                </p>
+                                alt="Reset Password"
+                                className="rounded-full mb-4 shadow-md mx-auto" style={{ width: '250px', height: '250px', objectFit: 'cover' }} />
+
+                            <form onSubmit={handleGetOTP}>
+                                <Typography id="forgot-password-modal-title" variant="h6" component="h2" sx={{ marginBottom : '0.5rem' }}>
+                                    We need to verify your identity before you can reset your password.
+                                </Typography>
 
                                 <TextField
                                     fullWidth
@@ -63,32 +69,32 @@ function ForgotPassword() {
                                     label="Enter Email"
                                     value={email}
                                     margin="normal"
-                                    sx={{ borderRadius: '1em' }}
                                     onChange={(event) => setEmail(event.target.value)}
-                                />
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <MailIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }} />
 
                                 <Button
-                                    type="submit" // Ensure button submits the form
+                                    type="submit"
                                     variant="contained"
                                     color="primary"
                                     fullWidth
-                                    sx={{ mt: 2, mb: 1, borderRadius: '1em' }}
-                                    disabled={isLoading}
-                                >Submit
-                                </Button>
+                                    disabled={isLoading}>Submit</Button>
 
-                                <Typography
-                                    variant="h6"
-                                    component="h2"
-                                    sx={{ fontFamily: 'serif', fontStyle: 'semi-bold' }}
-                                >
-                                    An OTP will be sent to the above-entered email.
+                                <Typography id="forgot-password-modal-title" variant="h6" component="h2" sx={{ marginTop: '0.5rem' }}>
+                                    Visit your email to Get the OTP.
                                 </Typography>
-                            </Box>
-                        </form>
-                    </div>
-                </div>
-            )}
+
+                            </form>
+
+                        </Box>
+                    </Modal>
+                )}
+            </div>
         </div>
     );
 }

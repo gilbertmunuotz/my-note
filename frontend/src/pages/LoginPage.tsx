@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import React, { useState } from 'react';
 import { useDispatch } from "react-redux";
 import Spinner from '../components/Spinner';
+import MailIcon from '@mui/icons-material/Mail';
 import { loginSuccess } from "../assets/authSlice";
 import { UserInfo } from '../Interfaces/Interfaces';
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,7 +24,7 @@ function LoginPage() {
     const handleTogglePasswordVisibility = () => setShowPassword(!showPassword);
 
 
-    // Form Login States
+    // Form Login State
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -62,7 +63,7 @@ function LoginPage() {
             {isLoading ? (
                 <Spinner loading={isLoading} />
             ) : (
-                <Modal open={open} onClose={handleClose} aria-labelledby="sign-in-modal-title">
+                <Modal open={open} onClose={handleClose} aria-labelledby="log-in-modal-title">
                     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '1px solid #000', p: 4 }}>
                         <Typography id="sign-in-modal-title" variant="h6" component="h2" className='text-center'>
                             Welcome Back.
@@ -76,6 +77,11 @@ function LoginPage() {
                             value={email}
                             margin="normal"
                             onChange={(event) => setEmail(event.target.value)}
+                            InputProps={{
+                                endAdornment: (<InputAdornment position="end">
+                                    <MailIcon />
+                                </InputAdornment>)
+                            }}
                         />
 
 

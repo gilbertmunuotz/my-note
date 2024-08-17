@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import upload from '../utilities/multerConfig';
 import validateOTP from '../middlewares/OTPMiddleware';
-import { validateLocalUser } from '../middlewares/UserMiddleware';
+import newPassword from '../middlewares/newPasswordMiddleware';
+import { validateLocalUser } from '../middlewares/userMiddleware';
 import { localVerify, checkAuth } from '../middlewares/authMiddleware';
-import { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP } from '../controllers/UserController';
+import { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP, ChangePassword } from '../controllers/UserController';
 
 // **** Functions **** //
 //Initiate Express Router
@@ -40,6 +41,10 @@ router.post('/user/Get-OTP', GenerateOTP);
 
 /* Verify OTP */
 router.post('/verify/otp', validateOTP, VerifyOTP);
+
+
+/* Change Password */
+router.post('/new-password', newPassword, ChangePassword);
 
 
 // **** Export default **** //

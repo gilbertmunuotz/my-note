@@ -1,6 +1,8 @@
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import Spinner from '../components/Spinner';
+import MailIcon from '@mui/icons-material/Mail';
+import PersonIcon from '@mui/icons-material/Person';
 import { Link, useNavigate } from 'react-router-dom';
 import { Credentials } from '../Interfaces/Interfaces';
 import { useRegisterMutation } from '../api/userAPISlice';
@@ -42,7 +44,7 @@ function RegisterPage() {
             await register(credentials).unwrap();
             toast.success("Login To Continue");
             navigate("/login")
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.error("Error Registering", error);
             if (error?.data.message) {
@@ -73,6 +75,11 @@ function RegisterPage() {
                                 value={name}
                                 required
                                 onChange={(event) => setUsername(event.target.value)}
+                                InputProps={{
+                                    endAdornment: (<InputAdornment position="end">
+                                        <PersonIcon />
+                                    </InputAdornment>)
+                                }}
                             />
 
 
@@ -84,6 +91,11 @@ function RegisterPage() {
                                 value={email}
                                 required
                                 onChange={(event) => setEmail(event.target.value)}
+                                InputProps={{
+                                    endAdornment: (<InputAdornment position="end">
+                                        <MailIcon />
+                                    </InputAdornment>)
+                                }}
                             />
 
 
