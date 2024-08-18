@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { SERVER_API } from "../config/constants";
-import { Credentials, UserInfo, ProfileInfo } from '../Interfaces/Interfaces';
+import { Credentials, UserInfo, ProfileInfo, UpdateUserInfo, GetOTP, VerifyOTP } from '../Interfaces/Interfaces';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: `${SERVER_API}/v1/Auth`,
@@ -45,7 +45,7 @@ export const userAPISlice = createApi({
             providesTags: ['User']
         }),
         // Update User Info
-        updateUser: builder.mutation<void, { _id: string, formData: FormData }>({
+        updateUser: builder.mutation<void, UpdateUserInfo>({
             query: ({ _id, formData }) => ({
                 url: `/update/${_id}`,
                 method: 'PUT',
@@ -53,11 +53,20 @@ export const userAPISlice = createApi({
             }),
             invalidatesTags: ['User']
         }),
-        getOTP: builder.mutation<void, string>({
+        // Get User OTP
+        getOTP: builder.mutation<void, GetOTP>({
             query: (email) => ({
                 url: `/user/Get-OTP`,
                 method: 'POST',
-                body: {email},
+                body: email,
+            }),
+        }),
+        // Verify User OTP
+        verifyOTP: builder.mutation<string, VerifyOTP>({
+            query: (data) => ({
+                url: `/verify/otp`,
+                method: 'POST',
+                body: data
             })
         }),
     })
@@ -66,4 +75,5 @@ export const userAPISlice = createApi({
 
 export const { useRegisterMutation, useLoginMutation,
     useLogoutMutation, useGetUserQuery,
-    useUpdateUserMutation, useGetOTPMutation } = userAPISlice;
+    useUpdateUserMutation, useGetOTPMutation,
+    useVerifyOTPMutation } = userAPISlice;

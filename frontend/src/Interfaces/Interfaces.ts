@@ -5,7 +5,7 @@ interface Note {
     createdAt?: string,
     updatedAt?: string,
     pinned?: boolean,
-    user: string; 
+    user: string;
 }
 
 
@@ -67,4 +67,28 @@ interface ProfileInfo {
     photo?: string;
 }
 
-export type { Note, FetchedNotes, SpinnerProps, AddNotes, EditNoteProps, Credentials, UserInfo, AuthResponse, ProfileInfo };
+
+interface UpdateUserInfo {
+    _id: string,
+    formData: FormData;
+}
+
+
+interface VerifyOTP {
+    email: string,
+    otp: number;
+}
+
+
+interface GetOTP {
+    email: string;
+}
+
+export type {
+    Note, FetchedNotes,
+    SpinnerProps, AddNotes,
+    EditNoteProps, Credentials,
+    UserInfo, AuthResponse,
+    ProfileInfo, VerifyOTP,
+    UpdateUserInfo, GetOTP
+};

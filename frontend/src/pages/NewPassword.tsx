@@ -1,11 +1,17 @@
 import { useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Box, Button, TextField } from "@mui/material";
+import { useNavigate, useLocation } from 'react-router-dom';
 // import { useResetPasswordMutation } from '../api/userAPISlice';
 
 function PasswordReset() {
+    // Custom Hooks
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Destructure Email from URL
+    const email = new URLSearchParams(location.search).get('email') || '';
+    console.log(email);
 
     const [password, setPassword] = useState('');
     // const [resetPassword] = useResetPasswordMutation();
