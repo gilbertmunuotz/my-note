@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Spinner from '../components/Spinner';
 import { useNavigate } from 'react-router-dom';
 import MailIcon from '@mui/icons-material/Mail';
+import { GetOTP } from '../Interfaces/Interfaces';
 import { useGetOTPMutation } from '../api/userAPISlice';
 import { Box, Button, Modal, InputAdornment, TextField, Typography } from "@mui/material";
 
@@ -28,9 +29,10 @@ function ForgotPassword() {
             toast.error("Please fill all required fields.");
             return;
         }
+        const info: GetOTP = { email };
 
         try {
-            await getOTP(email).unwrap();
+            await getOTP(info).unwrap();
             toast.success("OTP Sent Successfully!");
             setEmail('');
             navigate(`/otp-verify?email=${encodeURIComponent(email)}`);
@@ -59,7 +61,7 @@ function ForgotPassword() {
                                 className="rounded-full mb-4 shadow-md mx-auto" style={{ width: '250px', height: '250px', objectFit: 'cover' }} />
 
                             <form onSubmit={handleGetOTP}>
-                                <Typography id="forgot-password-modal-title" variant="h6" component="h2" sx={{ marginBottom : '0.5rem' }}>
+                                <Typography id="forgot-password-modal-title" variant="h6" component="h2" sx={{ marginBottom: '0.5rem', fontSize: '1rem' }}>
                                     We need to verify your identity before you can reset your password.
                                 </Typography>
 
@@ -85,7 +87,7 @@ function ForgotPassword() {
                                     fullWidth
                                     disabled={isLoading}>Submit</Button>
 
-                                <Typography id="forgot-password-modal-title" variant="h6" component="h2" sx={{ marginTop: '0.5rem' }}>
+                                <Typography id="forgot-password-modal-title" variant="h6" component="h2" sx={{ marginTop: '0.5rem', fontSize: '1rem' }}>
                                     Visit your email to Get the OTP.
                                 </Typography>
 
