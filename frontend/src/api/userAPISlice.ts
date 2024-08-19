@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { SERVER_API } from "../config/constants";
-import { Credentials, UserInfo, ProfileInfo, UpdateUserInfo, GetOTP, VerifyOTP } from '../Interfaces/Interfaces';
+import { Credentials, UserInfo, ProfileInfo, UpdateUserInfo, GetOTP, VerifyOTP, ResetPass } from '../Interfaces/Interfaces';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: `${SERVER_API}/v1/Auth`,
@@ -69,6 +69,14 @@ export const userAPISlice = createApi({
                 body: data
             })
         }),
+        // Reset Password
+        resetPassword: builder.mutation<void, ResetPass>({
+            query: (userInfo) => ({
+                url: `/new-password`,
+                method: 'POST',
+                body: userInfo
+            })
+        })
     })
 })
 
@@ -76,4 +84,4 @@ export const userAPISlice = createApi({
 export const { useRegisterMutation, useLoginMutation,
     useLogoutMutation, useGetUserQuery,
     useUpdateUserMutation, useGetOTPMutation,
-    useVerifyOTPMutation } = userAPISlice;
+    useVerifyOTPMutation, useResetPasswordMutation } = userAPISlice;

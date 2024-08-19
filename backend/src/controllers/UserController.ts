@@ -5,7 +5,7 @@ import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
 import { User } from '../constants/Interfaces';
 import { cloudinary } from '../utilities/cloudinary';
-import { sendMail } from '../utilities/nodeMailer';
+import { sendMail } from '../utilities/NodeMailer';
 import crypto from 'crypto';
 
 
@@ -226,7 +226,7 @@ async function VerifyOTP(req: Request, res: Response, next: NextFunction) {
 async function ChangePassword(req: Request, res: Response, next: NextFunction) {
 
     // Destructure req.body
-    const { email, newpassword } = req.body;
+    const { email, password } = req.body;
 
     try {
         const user = await UserModel.findOne({ email });
@@ -239,7 +239,7 @@ async function ChangePassword(req: Request, res: Response, next: NextFunction) {
         const salt = await bcrypt.genSalt(10);
 
         // Hash the new password
-        const hashedPassword = await bcrypt.hash(newpassword, salt);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         // Update the user document
         user.password = hashedPassword;

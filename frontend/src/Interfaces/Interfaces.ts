@@ -84,11 +84,19 @@ interface GetOTP {
     email: string;
 }
 
+
+interface ResetPass {
+    email: string,
+    password: string;
+}
+
+
 export type {
     Note, FetchedNotes,
     SpinnerProps, AddNotes,
     EditNoteProps, Credentials,
     UserInfo, AuthResponse,
     ProfileInfo, VerifyOTP,
-    UpdateUserInfo, GetOTP
+    UpdateUserInfo, GetOTP,
+    ResetPass
 };

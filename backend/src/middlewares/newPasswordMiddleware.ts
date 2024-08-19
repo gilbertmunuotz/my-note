@@ -6,7 +6,7 @@ const newPassword = (req: Request, res: Response, next: NextFunction) => {
     //Perform Joi Validation
     const noteSchema = Joi.object().keys({
         email: Joi.string().required(),
-        newpassword: Joi.string().required(),
+        password: Joi.string().required(),
     }).options({ abortEarly: false });
 
     const { error } = noteSchema.validate(req.body, { abortEarly: false });

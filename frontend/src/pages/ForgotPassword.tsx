@@ -61,10 +61,6 @@ function ForgotPassword() {
                                 className="rounded-full mb-4 shadow-md mx-auto" style={{ width: '250px', height: '250px', objectFit: 'cover' }} />
 
                             <form onSubmit={handleGetOTP}>
-                                <Typography id="forgot-password-modal-title" variant="h6" component="h2" sx={{ marginBottom: '0.5rem', fontSize: '1rem' }}>
-                                    We need to verify your identity before you can reset your password.
-                                </Typography>
-
                                 <TextField
                                     fullWidth
                                     required
@@ -87,10 +83,9 @@ function ForgotPassword() {
                                     fullWidth
                                     disabled={isLoading}>Submit</Button>
 
-                                <Typography id="forgot-password-modal-title" variant="h6" component="h2" sx={{ marginTop: '0.5rem', fontSize: '1rem' }}>
-                                    Visit your email to Get the OTP.
+                                <Typography id="forgot-password-modal-title" variant="h6" component="h2" sx={{ marginTop: '0.5rem', fontSize: '1rem', textAlign: 'center' }}>
+                                    An OTP will be Sent to Your Email.
                                 </Typography>
-
                             </form>
 
                         </Box>
