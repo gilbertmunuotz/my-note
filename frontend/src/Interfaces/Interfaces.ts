@@ -68,12 +68,6 @@ interface ProfileInfo {
 }
 
 
-interface UpdateUserInfo {
-    _id: string,
-    formData: FormData;
-}
-
-
 interface VerifyOTP {
     email: string,
     otp: number;
@@ -97,6 +91,5 @@ export type {
     EditNoteProps, Credentials,
     UserInfo, AuthResponse,
     ProfileInfo, VerifyOTP,
-    UpdateUserInfo, GetOTP,
-    ResetPass
+    GetOTP, ResetPass
 };

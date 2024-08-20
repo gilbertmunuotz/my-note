@@ -26,11 +26,12 @@ function ProfilePage() {
   const handleTogglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const userInfo = useSelector(user) as AuthResponse;   // Extract user information
-  const username = userInfo?.user?.name;   // Access name property correctly
+
   const userId = userInfo?.user?._id;   // Extract user ID
 
   // Use the user ID to fetch user details from the API
   const { data: userDetails } = useGetUserQuery(userId!);
+  const username = userDetails?.name;   // Access name property correctly
 
   // Update User Profile Info State Hook
   const [updateUser, { isLoading }] = useUpdateUserMutation();
@@ -113,6 +114,7 @@ function ProfilePage() {
           <Link to={"/home"}> <SwipeLeftAltIcon sx={{ fontSize: 45, color: '#1565c0' }} /></Link>
         </Tooltip>
         <h1 className="text-2xl font-semibold text-center sm:text-left">Welcome {username}</h1>
+
       </div>
 
       <hr className='my-3 border-y border-gray-400' />
@@ -124,7 +126,7 @@ function ProfilePage() {
             <div className="flex justify-between">
               <div className="">
                 {imageLoaded ? (
-                  <img src={previewImage} alt="Tap Camera Icon to Upload Photo" className='rounded-full' style={{ width: '250px', height: '250px', objectFit: 'cover', lineHeight: 10 }} />
+                  <img src={previewImage} alt="Tap Camera Icon to Add Photo" className='rounded-full' style={{ width: '250px', height: '250px', objectFit: 'cover', lineHeight: 10 }} />
                 ) : (
                   <Skeleton variant="circular" animation="wave" height={250} width={250} />
                 )}
