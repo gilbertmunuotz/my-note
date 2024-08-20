@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import NoteModel from "../models/Note";
-import { NoteBody, ReqNoteBody } from "../constants/Interfaces";
-import HttpStatusCodes from "../constants/HttpStatusCodes";
+import NoteModel from "@models/Note";
+import { NoteBody, ReqNoteBody } from "@constants/Interfaces";
+import HttpStatusCodes from "@constants/HttpStatusCodes";
 import mongoose from "mongoose";
 
 //(DESC) Create New Note

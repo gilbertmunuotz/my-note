@@ -8,16 +8,22 @@
   },
   "nodemonConfig": {
     "watch": [
-      "/server.ts"
+      "src/*"
     ],
     "ext": "ts, js, html",
     "ignore": [
       "src/public"
     ],
-    "exec": "ts-node ./server.ts"
+    "exec": "ts-node -r tsconfig-paths/register ./server.ts"
   },
   "_moduleAliases": {
-    "@src": "dist"
+    "@constants": "src/constants",
+    "@controllers": "src/controllers",
+    "@middlewares": "src/middleware",
+    "@models": "src/models",
+    "@routes": "src/routes",
+    "@utilities": "src/utilities",
+    "@src": "src"
   },
   "engines": {
     "node": ">=8.10.0"

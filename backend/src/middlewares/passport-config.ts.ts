@@ -1,9 +1,9 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from 'passport-local';
 import dotenv from 'dotenv';
-import UserModel from '../models/User';
+import UserModel from '@models/User';
 import bcrypt from 'bcryptjs';
-import { User } from '../constants/Interfaces';
+import { User } from '@constants/Interfaces';
 
 // Load environment variables
 dotenv.config();

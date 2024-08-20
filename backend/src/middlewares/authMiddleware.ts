@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import HttpStatusCodes from '../constants/HttpStatusCodes';
-import { User } from '../constants/Interfaces';
+import HttpStatusCodes from '@constants/HttpStatusCodes';
+import { User } from '@constants/Interfaces';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
