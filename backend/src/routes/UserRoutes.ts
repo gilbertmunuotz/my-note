@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import upload from '../utilities/multerConfig';
 import validateOTP from '../middlewares/OTPMiddleware';
-import newPassword from '../middlewares/newPasswordMiddleware';
-import { validateLocalUser } from '../middlewares/userMiddleware';
-import { localVerify, checkAuth } from '../middlewares/authMiddleware';
+import newPassword from '../middlewares/NewPasswordMiddleware';
+import { validateLocalUser } from '../middlewares/UserMiddleware';
+import { localVerify, checkAuth } from '../middlewares/AuthMiddleware';
 import { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP, ChangePassword } from '../controllers/UserController';
 
 // **** Functions **** //
