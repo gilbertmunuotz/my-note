@@ -2,8 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
+    "baseUrl": "./",
     "sourceMap": false,
-    "removeComments": true
+    "removeComments": true,
+    "rootDir": "./src",
   },
   "include": [
     "src/**/*",
@@ -13,6 +15,7 @@
     "node_modules",
     "spec",
     "src/public/",
-    "build.ts"
+    "build.ts",
+    "dist"
   ]
 }
