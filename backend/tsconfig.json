@@ -67,7 +67,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "spec/**/*.ts", "src/controllers/Study.ts",
+    "spec/**/*.ts", "src/controllers/Study.ts", "server.ts",
   ],
   "exclude": [
     "src/public/"

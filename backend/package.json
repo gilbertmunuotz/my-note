@@ -2,20 +2,20 @@
   "name": "backend",
   "version": "0.0.0",
   "scripts": {
-    "build": "npx ts-node build.ts",
+    "build": "npx ts-node server.ts",
     "lint": "npx eslint --ext .ts src/",
     "lint:tests": "npx eslint --ext .ts spec/",
     "dev": "nodemon"
   },
   "nodemonConfig": {
     "watch": [
-      "src"
+      "./src"
     ],
     "ext": "ts, html",
     "ignore": [
       "src/public"
     ],
-    "exec": "ts-node ./src/server.ts"
+    "exec": "ts-node ./server.ts"
   },
   "_moduleAliases": {
     "@src": "dist"
