@@ -11,15 +11,16 @@ import { Note } from "../Interfaces/Interfaces";
 import React, { useState, useEffect } from "react";
 import { logoutSuccess } from '../assets/authSlice';
 import { formatDate } from "../utilities/Datefunc";
-import { AuthResponse } from '../Interfaces/Interfaces';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useNavigate } from 'react-router-dom';
-import { useLogoutMutation } from '../api/userAPISlice';
 import PushPinIcon from '@mui/icons-material/PushPin';
+import { AuthResponse } from '../Interfaces/Interfaces';
 import { Fab, IconButton, Tooltip } from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useGetUserQuery, useLogoutMutation } from '../api/userAPISlice';
 import { useGetNotesQuery, useDeleteNoteMutation, usePinNoteMutation, useUnPinNoteMutation } from '../api/notesAPISlice';
+
 
 function Home() {
 
@@ -28,6 +29,9 @@ function Home() {
     const Id = userInfo?.user?._id;   // Extract user ID from user Slice
     const userId = Id; // Assign Id to userId
 
+    // Use the user ID to fetch user details from the API(Specifically Profile Photo)
+    const { data: userDetails } = useGetUserQuery(userId!);
+    const userPhoto = userDetails?.photo;
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -131,9 +135,17 @@ function Home() {
                         </div>
 
                         <div className="profile">
-                            <Tooltip title="Account">
+                            <Tooltip title="My Profile">
                                 <Link to={"/me/profile"}>
-                                    <AccountCircleIcon sx={{ fontSize: 40 }} />
+                                    {userPhoto ? (
+                                        <img
+                                            src={userPhoto}
+                                            alt="Profile"
+                                            style={{ width: '50px', height: '50px', borderRadius: '50%' }}
+                                        />
+                                    ) : (
+                                        <AccountCircleIcon sx={{ fontSize: 40 }} />
+                                    )}
                                 </Link>
                             </Tooltip>
                         </div>

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { SERVER_API } from "../config/constants";
-import { Credentials, UserInfo, ProfileInfo, UpdateUserInfo, GetOTP, VerifyOTP, ResetPass } from '../Interfaces/Interfaces';
+import { Credentials, UserInfo, ProfileInfo, GetOTP, VerifyOTP, ResetPass } from '../Interfaces/Interfaces';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: `${SERVER_API}/v1/Auth`,
@@ -45,7 +45,7 @@ export const userAPISlice = createApi({
             providesTags: ['User']
         }),
         // Update User Info
-        updateUser: builder.mutation<void, UpdateUserInfo>({
+        updateUser: builder.mutation<void, { _id: string, formData: FormData; }>({
             query: ({ _id, formData }) => ({
                 url: `/update/${_id}`,
                 method: 'PUT',
