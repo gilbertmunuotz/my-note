@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
 import HttpStatusCodes from "../constants/HttpStatusCodes";
 
-const validateNote = (req: Request, res: Response, next: NextFunction) => {
+const NoteMiddleware = (req: Request, res: Response, next: NextFunction) => {
     //Perform Joi Validation
     const noteSchema = Joi.object().keys({
         title: Joi.string().required(),
@@ -21,4 +21,4 @@ const validateNote = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //Export Default Constant
-export { validateNote };
+export { NoteMiddleware };
