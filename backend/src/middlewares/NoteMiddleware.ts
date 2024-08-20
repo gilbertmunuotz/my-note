@@ -21,4 +21,4 @@ const NoteMiddleware = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //Export Default Constant
-export default NoteMiddleware;
+export { NoteMiddleware };

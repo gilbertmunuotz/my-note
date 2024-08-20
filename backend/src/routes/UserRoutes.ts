@@ -3,7 +3,7 @@ import upload from '../utilities/multerConfig';
 import validateOTP from '../middlewares/OTPMiddleware';
 import NewPasswordMiddleware from '../middlewares/NewPasswordMiddleware';
 import UserMiddleware from '../middlewares/UserMiddleware';
-import { localVerify, checkAuth } from '../middlewares/AuthMiddleware';
+import { localVerify, checkAuth } from "../middlewares/AuthMiddleware"
 import { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP, ChangePassword } from '../controllers/UserController';
 
 // **** Functions **** //
