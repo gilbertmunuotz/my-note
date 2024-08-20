@@ -8,7 +8,7 @@
   },
   "nodemonConfig": {
     "watch": [
-      "/src"
+      "/server.ts"
     ],
     "ext": "ts, js, html",
     "ignore": [
