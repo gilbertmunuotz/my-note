@@ -3,7 +3,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors'
 import { USERS_URL } from "./src/constants/constant";
-const envPath = path.resolve(__dirname, './env', 'development.env');
+const envPath = path.join(__dirname,  '/env', 'development.env');
 dotenv.config({ path: envPath });
 import EnvVars from './src/constants/EnvVars';
 import mongoose from 'mongoose';

@@ -2,15 +2,15 @@
   "name": "backend",
   "version": "0.0.0",
   "scripts": {
-    "build": "npx ts-node build.ts",
+    "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon"
   },
   "nodemonConfig": {
     "watch": [
-      "./src"
+      "/src"
     ],
-    "ext": "ts, html",
+    "ext": "ts, js, html",
     "ignore": [
       "src/public"
     ],

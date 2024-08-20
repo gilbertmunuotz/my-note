@@ -22,7 +22,8 @@ export default {
     },
   },
   Jwt: {
-    Secret: (process.env.JWT_SECRET ?? ''),
+    Access_Secret: (process.env.JWT_ACCESS_SECRET ?? ''),
+    Refresh_Secret: (process.env.JWT_REFRESH_SECRET ?? ''),
     Exp: (process.env.COOKIE_EXP ?? ''), // exp at the same time as the cookie
   },
 } as const;
