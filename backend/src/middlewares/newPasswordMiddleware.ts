@@ -20,4 +20,4 @@ const NewPasswordMiddleware = (req: Request, res: Response, next: NextFunction) 
 };
 
 //Export Default Constant
-export default NewPasswordMiddleware;
+export { NewPasswordMiddleware };
