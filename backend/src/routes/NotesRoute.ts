@@ -1,6 +1,6 @@
 //  *** Import Router & Controller Func ***//
 import { Router } from "express";
-import { NoteMiddleware } from "../middlewares/NoteMiddleware";
+import NoteMiddleware from "../middlewares/NoteMiddleware";
 import { createNote, getAllNotes, getSingleNote, updateNote, pinNote, unPinNote, deleteNote } from '../controllers/NotesController';
 
 // **** Functions **** //

@@ -23,4 +23,4 @@ async function UserMiddleware(req: Request, res: Response, next: NextFunction) {
 }
 
 //Export Default Constant
-export { UserMiddleware };
+export default UserMiddleware;
