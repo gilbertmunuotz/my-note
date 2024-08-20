@@ -21,4 +21,4 @@ const validateNote = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //Export Default Constant
-export default validateNote;
+export { validateNote };
