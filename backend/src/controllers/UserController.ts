@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import HttpStatusCodes from '@constants/HttpStatusCodes';
-import { generateAccessToken, generateRefreshToken } from "@utilities/jwtToken";
-import UserModel from '@models/User';
+import HttpStatusCodes from '../constants/HttpStatusCodes';
+import { generateAccessToken, generateRefreshToken } from "../utilities/jwtToken";
+import UserModel from '../models/User';
 import bcrypt from 'bcryptjs';
-import { User } from '@constants/Interfaces';
-import { cloudinary } from '@utilities/cloudinary';
-import { sendMail } from '@utilities/NodeMailer';
+import { User } from '../constants/Interfaces';
+import { cloudinary } from '../utilities/cloudinary';
+import { sendMail } from '../utilities/NodeMailer';
 import crypto from 'crypto';
 
 

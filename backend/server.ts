@@ -2,18 +2,18 @@ import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors'
-import { USERS_URL } from "@constants/constant";
+import { USERS_URL } from "./src/constants/constant";
 const envPath = path.join(__dirname, 'env', 'development.env');
 dotenv.config({ path: envPath });
-import EnvVars from '@constants/EnvVars';
+import EnvVars from './src/constants/EnvVars';
 import mongoose from 'mongoose';
 import cookieparser from "cookie-parser";
-import NotesRoute from '@routes/NotesRoute';
-import AuthUserRoutes from '@routes/UserRoutes';
+import NotesRoute from './src/routes/NotesRoute';
+import AuthUserRoutes from './src/routes/UserRoutes';
 import { Request, Response, NextFunction } from "express";
-import HttpStatusCodes from '@constants/HttpStatusCodes'
+import HttpStatusCodes from './src/constants/HttpStatusCodes'
 import passport from 'passport';
-import '@middlewares/passport-config.ts'
+import './src/middlewares/passport-config.ts'
 
 
 //Connect to MongoDB

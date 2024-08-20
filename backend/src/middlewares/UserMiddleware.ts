@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
-import HttpStatusCodes from "@constants/HttpStatusCodes";
+import HttpStatusCodes from "../constants/HttpStatusCodes";
 
 async function UserMiddleware(req: Request, res: Response, next: NextFunction) {
 

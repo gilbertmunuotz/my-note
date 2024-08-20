@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import HttpStatusCodes from '@constants/HttpStatusCodes';
-import { User } from '@constants/Interfaces';
+import HttpStatusCodes from '../constants/HttpStatusCodes';
+import { User } from '../constants/Interfaces';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -11,7 +11,7 @@ dotenv.config();
 
 
 // Verify Local Passport User
-async function localVerify(req: Request, res: Response, next: NextFunction) {
+export async function localVerify(req: Request, res: Response, next: NextFunction) {
     passport.authenticate('local', { session: false }, (error: any, user: User, info: { message: string }) => {
 
         if (!user) {
@@ -31,7 +31,7 @@ async function localVerify(req: Request, res: Response, next: NextFunction) {
 
 
 // Check if user is Authenticated
-async function checkAuth(req: Request, res: Response, next: NextFunction) {
+export async function checkAuth(req: Request, res: Response, next: NextFunction) {
 
     // Get the cookie Token
     const cookie = req.cookies.accessToken;
@@ -51,6 +51,3 @@ async function checkAuth(req: Request, res: Response, next: NextFunction) {
         res.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'Invalid Token' });
     }
 }
-
-
-export { localVerify, checkAuth };

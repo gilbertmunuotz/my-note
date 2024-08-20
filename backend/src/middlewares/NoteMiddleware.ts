@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
-import HttpStatusCodes from '@constants/HttpStatusCodes';
+import HttpStatusCodes from '../constants/HttpStatusCodes';
 
 const NoteMiddleware = (req: Request, res: Response, next: NextFunction) => {
     //Perform Joi Validation
