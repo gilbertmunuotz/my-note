@@ -2,7 +2,7 @@ import { Router } from 'express';
 import upload from '../utilities/multerConfig';
 import validateOTP from '../middlewares/OTPMiddleware';
 import newPassword from '../middlewares/NewPasswordMiddleware';
-import { validateLocalUser } from '../middlewares/UserMiddleware';
+import { UserMiddleware } from '../middlewares/UserMiddleware';
 import { localVerify, checkAuth } from '../middlewares/AuthMiddleware';
 import { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP, ChangePassword } from '../controllers/UserController';
 
@@ -12,7 +12,7 @@ const router = Router();
 
 
 /* Local registration route */
-router.post('/register', validateLocalUser, Registration);
+router.post('/register', UserMiddleware, Registration);
 
 
 /* Local Login route */
@@ -32,7 +32,7 @@ router.get('/user/:id', GetUser);
 
 
 /* Update User By Id */
-router.put('/update/:id', upload.single('photo'), validateLocalUser, UserUpdate);
+router.put('/update/:id', upload.single('photo'), UserMiddleware, UserUpdate);
 
 
 /* Generate OTP */

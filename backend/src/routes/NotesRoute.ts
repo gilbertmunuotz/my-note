@@ -1,6 +1,6 @@
 //  *** Import Router & Controller Func ***//
 import { Router } from "express";
-import { validateNote } from "../middlewares/NoteMiddleware";
+import { NoteMiddleware } from "../middlewares/NoteMiddleware";
 import { createNote, getAllNotes, getSingleNote, updateNote, pinNote, unPinNote, deleteNote } from '../controllers/NotesController';
 
 // **** Functions **** //
@@ -13,7 +13,7 @@ router.get('/all/:id', getAllNotes);
 
 
 /* POST New Note */
-router.post('/new', validateNote, createNote);
+router.post('/new', NoteMiddleware, createNote);
 
 
 /* GET Single Note By Id */
@@ -21,7 +21,7 @@ router.get('/note/:id', getSingleNote);
 
 
 /* Update Note By Id */
-router.put('/update/:id', validateNote, updateNote);
+router.put('/update/:id', NoteMiddleware, updateNote);
 
 
 /* Pin A Note By Id */
