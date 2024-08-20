@@ -2,9 +2,8 @@
   "name": "backend",
   "version": "0.0.0",
   "scripts": {
-    "build": "npx ts-node server.ts",
-    "lint": "npx eslint --ext .ts src/",
-    "lint:tests": "npx eslint --ext .ts spec/",
+    "build": "npx ts-node build.ts",
+    "start": "node dist/server.js",
     "dev": "nodemon"
   },
   "nodemonConfig": {
