@@ -119,7 +119,13 @@ function Home() {
     }
 
     // Sort notes so that pinned notes come first
-    const sortedNotes = notes.slice().sort((a, b) => b.pinned - a.pinned);
+    const sortedNotes = notes.slice().sort((a, b) => {
+        const pinnedA = a.pinned ?? false;
+        const pinnedB = b.pinned ?? false;
+
+        // Sort so that pinned notes come first
+        return (pinnedB ? 1 : 0) - (pinnedA ? 1 : 0);
+    });
 
     return (
         <div className="p-4 relative min-h-screen">

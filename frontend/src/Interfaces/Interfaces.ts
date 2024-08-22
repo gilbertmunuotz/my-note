@@ -5,7 +5,7 @@ interface Note {
     createdAt?: string,
     updatedAt?: string,
     pinned?: boolean,
-    user: string;
+    user?: string;
 }
 
 

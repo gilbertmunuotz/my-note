@@ -18,7 +18,11 @@ function App() {
   const router = createBrowserRouter([
     { path: '/', element: <Landingpage />, errorElement: <NotFound /> },
     { path: '/home', element: (<PrivateRoute><Home /></PrivateRoute>), errorElement: <NotFound /> },
-    { path: '/note/:id', element: (<PrivateRoute><Edit /></PrivateRoute>), errorElement: <NotFound /> },
+    {
+      path: '/note/:id', element: (<PrivateRoute><Edit noteId={''} open={false} onClose={function (): void {
+        throw new Error('Function not implemented.');
+      }} /></PrivateRoute>), errorElement: <NotFound />
+    },
     { path: '/me/profile', element: (<PrivateRoute><Profile /></PrivateRoute>), errorElement: <NotFound /> },
     { path: '/login', element: <Login />, errorElement: <NotFound /> },
     { path: '/register', element: <Register />, errorElement: <NotFound /> },

@@ -126,7 +126,7 @@ function ProfilePage() {
             <div className="flex justify-between">
               <div className="">
                 {imageLoaded ? (
-                  <img src={previewImage} alt="Tap Camera Icon to Add Photo" className='rounded-full' style={{ width: '250px', height: '250px', objectFit: 'cover', lineHeight: 10 }} />
+                  <img src={previewImage as string | undefined} alt="Tap Camera Icon to Add Photo" className='rounded-full' style={{ width: '250px', height: '250px', objectFit: 'cover', lineHeight: 10 }} />
                 ) : (
                   <Skeleton variant="circular" animation="wave" height={250} width={250} />
                 )}
