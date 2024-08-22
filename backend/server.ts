@@ -15,15 +15,20 @@ import passport from 'passport';
 import './src/middlewares/passport-config.ts'
 
 
-//Connect to MongoDB
-async function connectToMongo() {
+// Connect to MongoDB
+async function connectToMongo(): Promise<void> {
   try {
-    await mongoose.connect(EnvVars.MongoDB_URL);
+    await mongoose.connect(EnvVars.MongoDB_URL, {
+      serverSelectionTimeoutMS: 30000, // Increase server selection timeout
+      connectTimeoutMS: 30000         // Increase connection timeout
+    });
     console.log('MongoDB connected successfully!');
   } catch (error) {
     console.error('Error Connecting to MongoDB', error);
+    throw error; // Propagate error to handle it during server startup
   }
 }
+
 //Call The Function
 connectToMongo();
 
