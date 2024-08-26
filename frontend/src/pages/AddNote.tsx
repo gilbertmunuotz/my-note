@@ -11,8 +11,9 @@ function AddNote({ open, onClose }: AddNotes) {
 
     //  State Hooks
     const userInfo = useSelector(user) as AuthResponse;   // Extract user information
-    const Id = userInfo?.user?._id;   // Extract user ID from user Slice
+    const Id = userInfo?._id;   // Extract user ID from user Slice
     const userId = Id; // Assign Id to userId
+
 
     const [addNewNote, { isLoading, isError }] = useAddNewNoteMutation();
     const [text, setText] = useState<string>('');
@@ -45,7 +46,7 @@ function AddNote({ open, onClose }: AddNotes) {
         <div>
             <>
                 <Modal open={open} onClose={onClose}>
-                    <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, border: '1px solid #000', p: 4, backgroundColor: 'background.paper', boxShadow: 24 }}>
+                    <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, border: '1px solid #000', p: 4, backgroundColor: 'background.paper', boxShadow: 24, maxHeight: '80vh', overflow: 'auto', }}>
                         <Typography className="text-center">
                             Create New Note
                         </Typography>
