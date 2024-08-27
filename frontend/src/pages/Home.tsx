@@ -24,14 +24,17 @@ import { useGetNotesQuery, useDeleteNoteMutation, usePinNoteMutation, useUnPinNo
 
 function Home() {
 
-    //  State Hooks
-    const userInfo = useSelector(user) as AuthResponse;   // Extract user information
-    const Id = userInfo?.user?._id;   // Extract user ID from user Slice
-    const userId = Id; // Assign Id to userId
+    // State Hooks
+    const userInfo = useSelector(user) as AuthResponse; // Extract user information
+
+    const userId = userInfo?._id; // Extract user ID from user Slice
+
 
     // Use the user ID to fetch user details from the API(Specifically Profile Photo)
     const { data: userDetails } = useGetUserQuery(userId!);
     const userPhoto = userDetails?.photo;
+
+    const [expandedNoteId, setExpandedNoteId] = useState<string | null>(null);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -45,10 +48,16 @@ function Home() {
     const [pin] = usePinNoteMutation();
     const [unPin] = useUnPinNoteMutation();
 
+    // Modals Functions
     const handleOpen = () => setModalOpen(true);
     const handleClose = () => { setModalOpen(false); setEditModalOpen(false); };// Closes both the add and edit modals and resets the selectedNoteId.
-    const handleEditOpen = (noteId: string) => { setSelectedNoteId(noteId); setEditModalOpen(true); };//  Sets the selectedNoteId and opens the edit modal.
+    const handleEditOpen = (noteId: string) => { setSelectedNoteId(noteId); setEditModalOpen(true); };// Sets the selectedNoteId and opens the edit modal.
     const handleEditClose = () => setEditModalOpen(false);
+
+
+    const handleToggleExpand = (noteId: string) => {
+        setExpandedNoteId(expandedNoteId === noteId ? null : noteId);
+    };
 
     // Populate form state with the fetched Note data on initial render
     useEffect(() => {
@@ -160,49 +169,55 @@ function Home() {
                     {notes.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 mb-4">
                             {sortedNotes.map((note: Note) => (
-                                <div key={note._id} className="p-4 rounded-md" style={{ background: '#EDEAE0' }}>
+                                <div
+                                    key={note._id}
+                                    className={`p-4 rounded-md cursor-pointer ${expandedNoteId === note._id ? 'bg-gray-200' : 'bg-gray-100'}`}
+                                    style={{ background: expandedNoteId === note._id ? '#EDEAE0' : '#F5F5F5' }}
+                                    onClick={() => handleToggleExpand(note._id as string)}>
                                     <div className="flex justify-between">
                                         <h1 className="text-xl font-bold mb-2">{note.title}</h1>
                                         {note.pinned ? (
                                             <Tooltip title="UnPin">
-                                                <button type="button" onClick={() => handleUnpinNote(note._id as string)}>{/* Asserted the note._id Type */}
+                                                <button type="button" onClick={(e) => { e.stopPropagation(); handleUnpinNote(note._id as string); }}>
                                                     <PushPinIcon />
                                                 </button>
                                             </Tooltip>
                                         ) : (
                                             <Tooltip title="Pin">
-                                                <button type="button" onClick={() => handlePinNote(note._id as string)}>{/* Asserted the note._id Type */}
+                                                <button type="button" onClick={(e) => { e.stopPropagation(); handlePinNote(note._id as string); }}>
                                                     <PushPinIcon sx={{ opacity: 0.2 }} />
                                                 </button>
                                             </Tooltip>
                                         )}
                                     </div>
                                     <p className="text-gray-700">{note.text}</p>
-                                    <section className="text-left text-sm flex justify-between sm:text-right sm:text-base border-t-2 border-y-white space-y-2">
-                                        <div className="icon mt-2 ">
-                                            <IconButton onClick={() => note._id && handleEditOpen(note._id)}>
-                                                <Tooltip title="Edit">
-                                                    <EditIcon />
-                                                </Tooltip>
-                                            </IconButton>
-                                            <IconButton onClick={() => note._id && handleDelete(note._id)} style={{ color: '#FF0000' }}>
-                                                <Tooltip title="Delete">
-                                                    <DeleteIcon />
-                                                </Tooltip>
-                                            </IconButton>
-                                        </div>
-                                        <div className="timeStamp">
-                                            {note.updatedAt && note.createdAt ? (
-                                                note.updatedAt > note.createdAt ? (
-                                                    `Updated: ${formatDate(note.updatedAt)}`
+                                    {expandedNoteId === note._id && (
+                                        <section className="text-left text-sm flex justify-between sm:text-right sm:text-base border-t-2 border-y-white space-y-2">
+                                            <div className="icon mt-2">
+                                                <IconButton onClick={(e) => { e.stopPropagation(); note._id && handleEditOpen(note._id); }}>
+                                                    <Tooltip title="Edit">
+                                                        <EditIcon />
+                                                    </Tooltip>
+                                                </IconButton>
+                                                <IconButton onClick={(e) => { e.stopPropagation(); note._id && handleDelete(note._id); }} style={{ color: '#FF0000' }}>
+                                                    <Tooltip title="Delete">
+                                                        <DeleteIcon />
+                                                    </Tooltip>
+                                                </IconButton>
+                                            </div>
+                                            <div className="timeStamp">
+                                                {note.updatedAt && note.createdAt ? (
+                                                    note.updatedAt > note.createdAt ? (
+                                                        `Updated: ${formatDate(note.updatedAt)}`
+                                                    ) : (
+                                                        `${formatDate(note.createdAt)}`
+                                                    )
                                                 ) : (
-                                                    `${formatDate(note.createdAt)}`
-                                                )
-                                            ) : (
-                                                `Created: ${formatDate(note.createdAt ?? '')}`
-                                            )}
-                                        </div>
-                                    </section>
+                                                    `Created: ${formatDate(note.createdAt ?? '')}`
+                                                )}
+                                            </div>
+                                        </section>
+                                    )}
                                 </div>
                             ))}
                         </div>
