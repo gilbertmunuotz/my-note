@@ -75,7 +75,7 @@ function AddNote({ open, onClose }: AddNotes) {
                             {isLoading ?
                                 <button
                                     type="submit"
-                                    className="my-3 py-2 px-32 rounded-md cursor-not-allowed text-white uppercase" style={{ backgroundColor: '#1565c0' }}>Saving.......</button>
+                                    className="my-3 py-2 px-32 rounded-md cursor-not-allowed text-white uppercase" style={{ backgroundColor: '#1565c0' }}>Saving......</button>
                                 : <Button
                                     fullWidth
                                     type="submit"

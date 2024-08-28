@@ -75,7 +75,7 @@ function EditNote({ open, onClose, noteId }: EditNoteProps) {
 
                             {isUpdating ?
                                 <button
-                                    className="my-2 py-2 px-32 rounded-md cursor-not-allowed text-white uppercase" style={{ backgroundColor: '#1565c0' }}>Updating.</button>
+                                    className="my-2 py-2 px-32 rounded-md cursor-not-allowed text-white uppercase" style={{ backgroundColor: '#1565c0' }}>Updating......</button>
                                 : <Button
                                     fullWidth
                                     type="submit"

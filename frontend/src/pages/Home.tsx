@@ -43,8 +43,10 @@ function Home() {
     const [selectedNoteId, setSelectedNoteId] = useState<string>(''); // Stores the ID of the note being edited
     const [notes, setNotes] = useState<Note[]>([]);
     const { data, isLoading, isError } = useGetNotesQuery(userId); // Pass Id to the Hook to Get All Notes
-    const [deleteNote] = useDeleteNoteMutation();
-    const [logout] = useLogoutMutation();
+    const [deleteNote, { isLoading: deleteSpin }] = useDeleteNoteMutation();
+    const [loadingNoteId, setLoadingNoteId] = useState<string | null>(null);
+    const [logout, { isLoading: logoutSpin }] = useLogoutMutation();
+    const [deletingNote, setDeletingNote] = useState<boolean>(false);
     const [pin] = usePinNoteMutation();
     const [unPin] = useUnPinNoteMutation();
 
@@ -70,6 +72,8 @@ function Home() {
     //Delete Note Logic
     async function handleDelete(_id: string) {
         if (window.confirm("This Action is Irreversible!")) {
+            // Set the loading state for this note
+            setLoadingNoteId(_id);
             try {
                 await deleteNote(_id).unwrap();
                 // Update the notes state after deletion
@@ -78,6 +82,8 @@ function Home() {
             } catch (error) {
                 console.error('Failed to delete Note: ', error);
                 toast.error("Error Deleting Note");
+            } finally {
+                setLoadingNoteId(null); // Reset the loading state
             }
         }
     }
@@ -86,7 +92,8 @@ function Home() {
     // User Logout Logic
     async function handleLogout(event: React.FormEvent) {
         event.preventDefault();
-
+        // Set the loading state for this note
+        setDeletingNote(true)
         try {
             const user = await logout().unwrap();
             dispatch(logoutSuccess(user));
@@ -98,6 +105,8 @@ function Home() {
             if (error?.data?.message) {
                 toast.error(error.data.message);
             }
+        } finally {
+            setDeletingNote(false); // Reset the loading state
         }
     }
 
@@ -145,8 +154,18 @@ function Home() {
                     <div className="flex justify-between my-2 mx-6">
                         <div className="logout">
                             <Tooltip title="Log Out">
-                                <button onClick={handleLogout} className='text-base text-white px-5 py-1 rounded-3xl' style={{ background: '#1976D2' }}><LogoutIcon /></button>
+                                <button onClick={handleLogout} className={`text-base text-white px-5 py-1 rounded-3xl ${deletingNote && logoutSpin ? 'cursor-not-allowed opacity-50' : ''}`} style={{ background: '#1976D2' }} disabled={deletingNote && logoutSpin}>
+                                    {deletingNote && logoutSpin ? (
+                                        null // Spinner will be shown separately
+                                    ) : (
+                                        <LogoutIcon />
+                                    )}
+                                </button>
                             </Tooltip>
+
+                            {deletingNote && logoutSpin && (
+                                <Spinner loading={logoutSpin} />
+                            )}
                         </div>
 
                         <div className="profile">
@@ -199,11 +218,16 @@ function Home() {
                                                         <EditIcon />
                                                     </Tooltip>
                                                 </IconButton>
-                                                <IconButton onClick={(e) => { e.stopPropagation(); note._id && handleDelete(note._id); }} style={{ color: '#FF0000' }}>
-                                                    <Tooltip title="Delete">
-                                                        <DeleteIcon />
-                                                    </Tooltip>
+                                                <IconButton onClick={(e) => { e.stopPropagation(); note._id && handleDelete(note._id); }} style={{ color: '#FF0000' }} disabled={loadingNoteId === note._id && deleteSpin}>
+                                                    {loadingNoteId === note._id && deleteSpin ? (
+                                                        <Spinner loading={deleteSpin} /> 
+                                                    ) : (
+                                                        <Tooltip title="Delete">
+                                                            <DeleteIcon />
+                                                        </Tooltip>
+                                                    )}
                                                 </IconButton>
+
                                             </div>
                                             <div className="timeStamp">
                                                 {note.updatedAt && note.createdAt ? (
