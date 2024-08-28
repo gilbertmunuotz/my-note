@@ -27,7 +27,7 @@ function ProfilePage() {
 
   const userInfo = useSelector(user) as AuthResponse;   // Extract user information
 
-  const userId = userInfo?._id;   // Extract user ID
+  const userId = userInfo?.user?._id; // Extract user ID from user Slice
 
   // Use the user ID to fetch user details from the API
   const { data: userDetails } = useGetUserQuery(userId!);

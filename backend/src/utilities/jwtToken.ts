@@ -4,9 +4,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const generateAccessToken = (user: any) => {
-    return jwt.sign({ id: user._id }, process.env.JWT_ACCESS_SECRET!, { expiresIn: '30 min' });
+    // Short-lived access token
+    return jwt.sign({ id: user._id }, process.env.JWT_ACCESS_SECRET!, { expiresIn: '2 min' });
 };
 
 export const generateRefreshToken = (user: any) => {
-    return jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET!, { expiresIn: '7d' });
+    // Longer-lived refresh token
+    return jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET!, { expiresIn: '3 min' });
 };

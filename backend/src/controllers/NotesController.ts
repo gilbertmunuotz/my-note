@@ -31,7 +31,8 @@ async function createNote(req: Request, res: Response, next: NextFunction) {
 async function getAllNotes(req: Request, res: Response, next: NextFunction) {
 
     // Extract user ID from request
-    const userId = req.params.id as string;
+    const userId = req.params.id;
+
 
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(HttpStatusCodes.BAD_REQUEST).send({ status: 'error', message: 'Invalid or missing user ID' });

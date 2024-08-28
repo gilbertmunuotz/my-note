@@ -48,37 +48,35 @@ async function Login(req: Request, res: Response, next: NextFunction) {
 
         // Generate tokens
         const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
 
-        // Set tokens in cookies
-        res.cookie('accessToken', accessToken, { httpOnly: true });
-        res.cookie('refreshToken', refreshToken, { httpOnly: true });
+        // Set the refresh token in an httpOnly cookie
+        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'strict', });
 
-        return res.status(HttpStatusCodes.OK).json({ message: 'Login successful', user });
+
+        // Send the access token in the response body
+        return res.status(HttpStatusCodes.OK).json({ message: 'Login successful', user, accessToken });
     } catch (error) {
         return next(error);
     }
 };
 
 
-//(DESC) Check If User Is Logged
+// (DESC) Check If User Is Logged
 async function IsLogged(req: Request, res: Response, next: NextFunction) {
     res.status(HttpStatusCodes.OK).json({ message: 'This is a protected route', user: req.user });
 }
 
 
-//(DESC) Passport Local Logout User
+// (DESC) Passport Local Logout User
 async function Logout(req: Request, res: Response, next: NextFunction) {
 
     try {
         // Clear cookies that store JWTs
         res.clearCookie('accessToken');
-        res.clearCookie('refreshToken');
         return res.status(HttpStatusCodes.OK).json({ message: 'Logged out successfully' });
     } catch (error) {
         return res.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'Logout Error' });
     }
-
 }
 
 
@@ -261,4 +259,10 @@ async function ChangePassword(req: Request, res: Response, next: NextFunction) {
 }
 
 
-export { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP, ChangePassword };
+export {
+    Registration, Login,
+    IsLogged, Logout,
+    GetUser, UserUpdate,
+    GenerateOTP, VerifyOTP,
+    ChangePassword
+};

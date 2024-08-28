@@ -45,16 +45,18 @@ interface UserInfo {
 
 
 interface AuthResponse {
-    _id: string;
-    name: string;
-    email: string;
-    password: string;
-    photos: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
+    message: string;
+    user: {
+        _id: string;
+        name: string;
+        email: string;
+        password: string;
+        photo: string;
+        createdAt: string;
+        updatedAt: string;
+        __v: number;
+    }
 }
-
 
 interface ProfileInfo {
     _id?: string,

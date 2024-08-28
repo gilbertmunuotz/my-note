@@ -50,6 +50,7 @@ export const notesAPISlice = createApi({
                 url: `/delete/${_id}`,
                 method: 'DELETE'
             }),
+            invalidatesTags: ['Notes']
         }),
         pinNote: builder.mutation<void, string>({
             query: (note_id) => ({
