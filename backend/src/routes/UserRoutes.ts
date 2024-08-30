@@ -3,8 +3,8 @@ import upload from '../utilities/multerConfig';
 import validateOTP from '../middlewares/OTPMiddleware';
 import { NewPasswordMiddleware } from "../middlewares/NewPasswordMiddleware";
 import UserMiddleware from '../middlewares/UserMiddleware';
-import { localVerify, checkAuth } from "../middlewares/AuthMiddleware"
-import { Registration, Login, IsLogged, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP, ChangePassword } from '../controllers/UserController';
+import { localVerify, checkAuth } from "../middlewares/authMiddleware"
+import { Registration, Login, IsLogged, RefreshToken, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP, ChangePassword } from '../controllers/UserController';
 
 // **** Functions **** //
 //Initiate Express Router
@@ -20,6 +20,10 @@ router.post('/login', localVerify, Login);
 
 /* Check if User is Logged In */
 router.get('/isLoggedIn', checkAuth, IsLogged);
+
+
+/* Get New Access Token*/
+router.post('/refresh-token', RefreshToken);
 
 
 /* Local LogOut route */
