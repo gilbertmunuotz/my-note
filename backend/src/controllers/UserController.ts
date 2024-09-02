@@ -7,6 +7,7 @@ import { User } from '../constants/Interfaces';
 import { cloudinary } from '../utilities/cloudinary';
 import { sendMail } from '../utilities/NodeMailer';
 import crypto from 'crypto';
+import jwt from "jsonwebtoken";
 
 
 //(DESC) Passport Local User registration 
@@ -46,15 +47,18 @@ async function Login(req: Request, res: Response, next: NextFunction) {
     try {
         const user = req.user;
 
-        // Generate tokens
+        // Generate Access Token
         const accessToken = generateAccessToken(user);
 
-        // Set the refresh token in an httpOnly cookie
-        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'strict', });
+        // Generate Refresh Token
+        const refreshToken = generateRefreshToken(user);
+
+        // Store Refresh Token in an HttpOnly cookie
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
 
 
-        // Send the access token in the response body
-        return res.status(HttpStatusCodes.OK).json({ message: 'Login successful', user, accessToken });
+        // Send both the access &refresh token to client
+        return res.status(HttpStatusCodes.OK).json({ message: 'Login successful', user, accessToken, refreshToken });
     } catch (error) {
         return next(error);
     }
@@ -67,11 +71,36 @@ async function IsLogged(req: Request, res: Response, next: NextFunction) {
 }
 
 
+// (DESC) Get New Access Token
+async function RefreshToken(req: Request, res: Response, next: NextFunction) {
+
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+        return res.status(HttpStatusCodes.UNAUTHORIZED).json({ message: 'No Refresh Token Provided' });
+    }
+
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as jwt.Secret, (error: any, user: any) => {
+        if (error) {
+            return res.status(HttpStatusCodes.FORBIDDEN).json({ message: 'Invalid refresh token' });
+        }
+
+        // Generate a new access token
+        const accessToken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_ACCESS_SECRET as jwt.Secret, { expiresIn: '15 min' });
+
+        return res.status(HttpStatusCodes.OK).json({ message: 'Access Token Refreshed Successfully', accessToken, });
+    })
+};
+
+
 // (DESC) Passport Local Logout User
 async function Logout(req: Request, res: Response, next: NextFunction) {
 
     try {
-        // Clear cookies that store JWTs
+        // Clear the refresh token cookie stored in Server
+        res.clearCookie('refreshToken');
+
+        // Optionally, you can also clear the access token cookie
         res.clearCookie('accessToken');
         return res.status(HttpStatusCodes.OK).json({ message: 'Logged out successfully' });
     } catch (error) {
@@ -264,5 +293,5 @@ export {
     IsLogged, Logout,
     GetUser, UserUpdate,
     GenerateOTP, VerifyOTP,
-    ChangePassword
+    ChangePassword, RefreshToken
 };

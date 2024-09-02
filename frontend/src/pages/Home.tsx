@@ -3,7 +3,7 @@ import EditNote from './EditNote';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { user } from '../assets/authSlice';
+import { user} from '../assets/authSlice';
 import Spinner from "../components/Spinner";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -27,9 +27,8 @@ function Home() {
     // State Hooks
     const userInfo = useSelector(user) as AuthResponse; // Extract user information
 
-    const userId = userInfo?.user?._id; // Extract user ID from user Slice
-
-
+    const userId = userInfo?._id; // Extract user ID from user Slice
+    
     // Use the user ID to fetch user details from the API(Specifically Profile Photo)
     const { data: userDetails } = useGetUserQuery(userId!);
     const userPhoto = userDetails?.photo;
@@ -220,7 +219,7 @@ function Home() {
                                                 </IconButton>
                                                 <IconButton onClick={(e) => { e.stopPropagation(); note._id && handleDelete(note._id); }} style={{ color: '#FF0000' }} disabled={loadingNoteId === note._id && deleteSpin}>
                                                     {loadingNoteId === note._id && deleteSpin ? (
-                                                        <Spinner loading={deleteSpin} /> 
+                                                        <Spinner loading={deleteSpin} />
                                                     ) : (
                                                         <Tooltip title="Delete">
                                                             <DeleteIcon />

@@ -11,7 +11,7 @@ function AddNote({ open, onClose }: AddNotes) {
 
     //  State Hooks
     const userInfo = useSelector(user) as AuthResponse;   // Extract user information
-    const Id =  userInfo?.user?._id; // Extract user ID from user Slice
+    const Id =  userInfo?._id; // Extract user ID from user Slice
 
     const [addNewNote, { isLoading, isError }] = useAddNewNoteMutation();
     const [text, setText] = useState<string>('');

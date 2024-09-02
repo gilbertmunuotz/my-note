@@ -34,16 +34,16 @@ export async function localVerify(req: Request, res: Response, next: NextFunctio
 export async function checkAuth(req: Request, res: Response, next: NextFunction) {
 
     // Get the cookie Token
-    const cookie = req.cookies.accessToken;
+    const token = req.headers['authorization']?.split(' ')[1];
 
     //check if cookie Token is present
-    if (!cookie) {
+    if (!token) {
         return res.status(HttpStatusCodes.UNAUTHORIZED).json({ message: "Unathorized Access!. Denied" });
     }
 
     try {
         // check If token is Valid
-        const decodedToken = jwt.verify(cookie, process.env.JWT_SECRET!);
+        const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
         req.user = decodedToken;
         next();
 
