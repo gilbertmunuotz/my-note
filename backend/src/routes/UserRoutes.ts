@@ -5,17 +5,18 @@ import { NewPasswordMiddleware } from "../middlewares/NewPasswordMiddleware";
 import UserMiddleware from '../middlewares/UserMiddleware';
 import { localVerify, checkAuth } from "../middlewares/authMiddleware"
 import { Registration, Login, IsLogged, RefreshToken, Logout, GetUser, UserUpdate, GenerateOTP, VerifyOTP, ChangePassword } from '../controllers/UserController';
+import { RateLimiter } from '../utilities/rate-limit';
 
 // **** Functions **** //
 //Initiate Express Router
 const router = Router();
 
 /* Local registration route */
-router.post('/register', UserMiddleware, Registration);
+router.post('/register', RateLimiter, UserMiddleware, Registration);
 
 
 /* Local Login route */
-router.post('/login', localVerify, Login);
+router.post('/login', RateLimiter, localVerify, Login);
 
 
 /* Check if User is Logged In */
@@ -39,7 +40,7 @@ router.put('/update/:id', upload.single('photo'), UserMiddleware, UserUpdate);
 
 
 /* Generate OTP */
-router.post('/user/Get-OTP', GenerateOTP);
+router.post('/user/Get-OTP', RateLimiter, GenerateOTP);
 
 
 /* Verify OTP */
