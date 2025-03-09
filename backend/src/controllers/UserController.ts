@@ -192,7 +192,7 @@ async function UserUpdate(req: Request, res: Response, next: NextFunction) {
 }
 
 
-//(DESC) Check E-mail &Send OTP 
+//(DESC) Check E-mail & Send OTP 
 async function GenerateOTP(req: Request, res: Response, next: NextFunction) {
 
     // Destructure Req.body
@@ -208,6 +208,7 @@ async function GenerateOTP(req: Request, res: Response, next: NextFunction) {
         // Generate a 6-digit OTP
         const otp = crypto.randomInt(100000, 999999);
 
+        // Update the user document with the new OTP and expiry
         user.resetOtp = otp;
         // 10 minutes expiry
         user.otpExpires = Date.now() + 10 * 60 * 1000;
