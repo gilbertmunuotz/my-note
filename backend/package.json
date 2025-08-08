@@ -4,7 +4,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "check": "tsc --noEmit"
   },
   "nodemonConfig": {
     "watch": [
